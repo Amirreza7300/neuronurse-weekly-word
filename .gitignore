@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+neuronurse_weekly_session.session
+*.session
+.env
