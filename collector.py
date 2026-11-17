@@ -79,6 +79,16 @@ def save_state(state):
         json.dump(state, f, ensure_ascii=False, indent=2)
 
 
+def _sync_state(state, items_by_key):
+    # پیشرفت تا اینجا را در state بنویس تا اگر اجرا نیمه‌کاره ماند،
+    # اجرای بعد از همان‌جا ادامه دهد، نه از صفر.
+    state["items"] = sorted(
+        items_by_key.values(),
+        key=lambda x: (x.get("date", ""), x.get("channel_msg_id", 0)),
+    )
+    save_state(state)
+
+
 def week_key_for(dt_tehran):
     """جمعه ۰۰:۰۰ تهران شروع هفته است. dt را به شروع همان هفته ببر."""
     d = dt_tehran.date()
@@ -511,7 +521,7 @@ async def process_visual(client, entity, message, admin_user_ids, admin_chat_ids
     }
 
 
-async def collect_source(client, cfg, source, state, items_by_key):
+async def collect_source(client, cfg, source, state, items_by_key, limit=0):
     channel = source["channel"]
     if "CHANGEME" in channel:
         print(f"رد شد: کانال {source['id']} هنوز در config.yaml تنظیم نشده ({channel})")
@@ -556,6 +566,11 @@ async def collect_source(client, cfg, source, state, items_by_key):
         items_by_key[key] = item
         new_count += 1
         state.setdefault("last_seen", {})[source["id"]] = max(state["last_seen"].get(source["id"], 0), message.id)
+        if new_count % 50 == 0:
+            _sync_state(state, items_by_key)
+        if limit and new_count >= limit:
+            print(f"سقف {limit} پست در این اجرا رسید — بقیه در اجرای بعد.")
+            break
 
     # چک دوباره pendingها
     for mid in sorted(pending_ids):
@@ -579,10 +594,11 @@ async def collect_source(client, cfg, source, state, items_by_key):
             await asyncio.sleep(e.seconds + 5)
         except Exception as e:
             print(f"خطا در چک دوباره {mid}: {e}")
+    _sync_state(state, items_by_key)
     return new_count
 
 
-async def main_async():
+async def main_async(limit=0):
     cfg = load_config()
     state = load_state()
     items_by_key = {(i["source"], i["channel_msg_id"]): i for i in state.get("items", [])}
@@ -597,7 +613,11 @@ async def main_async():
     print("وصل شدم به تلگرام.")
     total = 0
     for source in cfg.get("sources", []):
-        total += await collect_source(client, cfg, source, state, items_by_key)
+        try:
+            total += await collect_source(client, cfg, source, state, items_by_key, limit=limit)
+        except Exception as e:
+            print(f"خطا در منبع {source.get('id')}: {e} — ادامه با منبع بعد.")
+        _sync_state(state, items_by_key)
     await client.disconnect()
     # نهایی‌کردن پست‌های قدیمی‌تر از recheck_hours
     now = datetime.now(TEHRAN)
@@ -617,9 +637,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--collect", action="store_true")
     ap.add_argument("--build", action="store_true")
+    ap.add_argument("--limit", type=int, default=0,
+                    help="حداکثر پست تازه در هر اجرا (۰ یعنی بدون سقف). "
+                         "برای بایگانی اولیه کانال، هر اجرا تکه‌ای جلو می‌رود "
+                         "و state ذخیره و کامیت می‌شود تا اجرا تایم‌اوت نخورد.")
     args = ap.parse_args()
     if args.collect:
-        asyncio.run(main_async())
+        asyncio.run(main_async(limit=args.limit))
     if args.build:
         import subprocess
         subprocess.run([sys.executable, "build_docx.py"], check=True)
