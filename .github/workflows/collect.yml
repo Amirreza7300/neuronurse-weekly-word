@@ -9,6 +9,12 @@ on:
     # = پنجشنبه ۲۰:۰۰ UTC (هفته از جمعه ۰۰:۰۰ شروع می‌شود)
     - cron: "0 20 * * 4"
   workflow_dispatch:
+    inputs:
+      recheck_missing:
+        description: "دوباره‌چک آیتم‌های بدون توضیح (عدد = سقف آیتم؛ خالی = جمع‌کردن عادی)"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: write
@@ -38,7 +44,12 @@ jobs:
           TG_API_ID: ${{ secrets.TG_API_ID }}
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
           TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
-        run: python collector.py --collect --build --limit 1000
+        run: |
+          if [ -n "${{ inputs.recheck_missing }}" ]; then
+            python collector.py --recheck-missing ${{ inputs.recheck_missing }} --build
+          else
+            python collector.py --collect --build --limit 1000
+          fi
       - name: Commit state + Word files
         if: always()
         run: |
