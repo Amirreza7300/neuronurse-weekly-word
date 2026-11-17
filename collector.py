@@ -1183,10 +1183,11 @@ async def collect_source(client, entity, source, admin_keys, state, limit):
     return processed
 
 
-async def recheck_missing(client, sources_by_id, state, cap):
+async def recheck_missing(client, sources_by_id, state, cap, only_pending=False):
     """
     آیتم‌هایی که توضیح ندارند را دوباره از تلگرام می‌خواند (قدیمی‌ترین‌ها اول).
     آیتمی که بعد از این تلاش هم توضیح ندارد، pending می‌ماند و نهایی نمی‌شود.
+    only_pending=True یعنی فقط آیتم‌های pending (تازه و بی‌توضیح) — برای اجرای عادی.
     """
     cfg = load_config()
     allow_vote = bool(cfg.get("allow_vote", True))
@@ -1195,6 +1196,8 @@ async def recheck_missing(client, sources_by_id, state, cap):
     max_v = int(cfg.get("max_admin_messages_visual", MAX_ADMIN_MESSAGES_VISUAL))
 
     missing = [it for it in state.get("items", []) if not _has_explanation(it)]
+    if only_pending:
+        missing = [it for it in missing if it.get("status") == "pending"]
     missing.sort(key=lambda it: (it.get("last_recheck_at") or "",
                                  it.get("date", ""), it.get("channel_msg_id", 0)))
     missing = missing[:cap]
@@ -1307,6 +1310,11 @@ async def main_async(args):
                 for n in names:
                     print(f"  - {n}")
             await collect_source(client, entity, src, admin_keys, state, args.limit)
+        # دوباره‌چک آیتم‌های pending (توضیح دیررس ادمین) — مثل رفتار قبلی collector؛
+        # فقط تازه‌ها، نه هزار تای قدیمی (آن‌ها با --recheck-missing جداگانه پر می‌شوند).
+        await recheck_missing(client, sources_by_id, state,
+                              int(cfg.get("recheck_missing_batch", 200)),
+                              only_pending=True)
         # نهایی‌کردن: فقط در اجرای عادی؛ در recheck آیتم بدون توضیح نهایی نمی‌شود
         finalize_items(state,
                        int(cfg.get("recheck_hours", 48)),

@@ -158,8 +158,12 @@ def add_image_once(doc, path, rendered, width=4.0):
 def add_segments(doc, segments, size=FONT_SIZE, force_bold=False):
     p = para(doc, size)
     for seg in segments or [{"t": "", "b": False}]:
-        if seg.get("u"):
-            add_hyperlink(p, doc, seg.get("t", ""), seg["u"], size,
+        # «u» در سگمنت‌ها بولینِ زیرخط‌دار است، نه آدرس؛ آدرس واقعی در «url» است
+        # (در state قدیمی «url» نیست — آنجا فقط زیرخط داریم). اگر «u» رشته باشد
+        # (اسکیمای قدیمی) همان را آدرس حساب کن تا لینک‌ها گم نشوند.
+        url = seg.get("url") or (seg.get("u") if isinstance(seg.get("u"), str) else None)
+        if url:
+            add_hyperlink(p, doc, seg.get("t", ""), url, size,
                           bold=bool(seg.get("b")) or force_bold)
             continue
         r = p.add_run(seg.get("t", ""))
@@ -263,8 +267,9 @@ def build_quiz_doc(items, title, subtitle):
             if not segs:
                 segs = [{"t": opt, "b": False}]
             for seg in segs:
-                if seg.get("u"):
-                    add_hyperlink(p, doc, seg.get("t", ""), seg["u"], FONT_SIZE,
+                url = seg.get("url") or (seg.get("u") if isinstance(seg.get("u"), str) else None)
+                if url:
+                    add_hyperlink(p, doc, seg.get("t", ""), url, FONT_SIZE,
                                   bold=bool(seg.get("b")))
                     continue
                 r = p.add_run(seg.get("t", ""))
