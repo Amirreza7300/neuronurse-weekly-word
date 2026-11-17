@@ -1,31 +1,42 @@
 # -*- coding: utf-8 -*-
 """
 جمع‌کننده تدریجی کانال‌های نورونرس (Telethon — با اکانت خودت).
-چرا Telethon و نه ربات Bot API؟ ربات تاریخچه کانال، کامنت‌های گروه
-Discussion و جواب صحیح کوییز را نمی‌تواند بخواند؛ اکانت کاربری می‌تواند.
-قانون‌های استخراج — همان قانون‌های اثبات‌شده قبلی (telegram-admin-extract):
-  - جواب صحیح از خود نظرسنجی (poll.results) گرفته می‌شود، نه از کامنت.
-    اگر نتیجه هنوز دیده نمی‌شود، با اجازه امیررضا (2026-11-17،
-    config: allow_vote=true) یک رای به گزینه اول داده می‌شود تا
-    تلگرام جواب صحیح را نشان دهد؛ نتیجه رای برای او مهم نیست.
-    اگر allow_vote خاموش باشد، جواب «نامشخص» می‌ماند و در اجراهای
-    بعد دوباره چک می‌شود. فقط اگر در کامنت ادمین صریحاً «گزینه ب»
-    و... آمده بود، به‌عنوان حدس علامت‌دار ثبت می‌شود
-    (answer_source=comment_guess).
+هسته‌ی استخراج دقیقاً همان منطق اثبات‌شده‌ی اسکریپت‌های خود امیررضا است
+(main_admin برای کوییز، extract_hashtags برای محتوای هشتگ‌دار) که
+هزاران سوال را با توضیح کامل استخراج کرده‌اند؛ فقط سیم‌کشی بایگانی
+(وضعیت، هفته‌ها، خروجی JSON، اجرای GitHub Actions) و ظاهر ورد
+(وزیرمتن، راست‌چین، قالب توافق‌شده) دور آن ساخته شده است.
+
+چرا نسخه‌ی قبلی collector توضیح‌ها را خالی می‌گذاشت (۰ از ۱۰۰۰)؟
+  - وقتی تلگرام لیست ادمین‌ها را برنمی‌گرداند، اسکریپت قدیمی
+    admin_keys را None می‌کرد تا اولین کامنت‌گذار ادمین فرض شود؛
+    collector قبلی این پرچم را نداشت و با لیست خالی، هیچ‌کس را
+    ادمین نمی‌شناخت (no_admin_found).
+  - دنباله‌ی کامنت‌ها باید نسبت به ریشه‌ی واقعی ترد (پیام آینه‌ای
+    پست در گروه Discussion) سنجیده شود؛ collector قبلی فرض می‌کرد
+    کامنت‌ها مستقیم به آیدی پست کانال ریپلی شده‌اند. این‌جا
+    find_root_id ریشه را از روی خودِ ریپلای‌ها پیدا می‌کند.
+قانون‌های استخراج (از اسکریپت‌های خودت، بدون تغییر):
+  - جواب صحیح از خود نظرسنجی (poll.results)؛ اگر هنوز دیده نمی‌شود
+    و config: allow_vote=true، یک رای به گزینه اول داده می‌شود تا
+    تلگرام جواب را نشان دهد؛ نتیجه رای مهم نیست. فقط اگر در کامنت
+    صریحاً «گزینه ب» و... آمده بود، به‌عنوان حدس علامت‌دار ثبت
+    می‌شود (answer_source=comment_guess).
   - توضیح فقط از اولین ادمینِ کامنت‌گذار، فقط پیام‌های متوالی همان
-    ادمین، سقف ۷ پیام، فقط ریپلای مستقیم به خود پست یا ریپلای به پیام
-    قبلی خودش؛ ریپلای به دیگران یا پیام غیرادمین وسط، دنباله را قطع
-    می‌کند. پیام با پروفایل گروه/کانال (sender_chat) هم ادمین است؛
-    پیام بدون فرستنده در گروه Discussion هم ادمین ناشناس است.
-  - اگر هیچ ادمینی توضیح نداده بود، همان قانون روی اولین کامنت‌گذار
-    اعمال می‌شود و در ورد مشخص می‌شود که از ادمین نیست.
+    ادمین، سقف ۷ پیام برای کوییز و ۹ پیام برای محتوای تصویری؛ فقط
+    ریپلای به خودِ پست (ریشه‌ی ترد) یا ریپلای به پیام قبلی خودش؛
+    پیام با پروفایل گروه/کانال (c) و پیام بدون فرستنده (anon) هم
+    ادمین است؛ حساب‌های سرویس تلگرام (ALWAYS_ADMIN_USER_IDS) همیشه
+    ادمین‌اند. اگر هیچ ادمینی پیدا نشد، همان قانون روی اولین
+    کامنت‌گذار اعمال می‌شود و در ورد مشخص می‌شود که از ادمین نیست.
   - صورت سوال: اگر کوییز ریپلای به پیامی باشد، آن پیام (متن/عکس)
     جزو صورت سوال است. پیام بالای سوال فقط برای شماره‌های داخل
     config (preceding_stem_numbers).
   - عکس صورت سوال دانلود می‌شود؛ عکس کامنت نه. توضیح فقط‌عکس:
-    «فقط عکس بود» نوشته می‌شود.
+    «فقط عکس بود» نوشته می‌شود. PDF ضمیمه (تا ۳۰ مگ) دانلود می‌شود.
   - شماره چاپ‌شده لاتین ابتدای سوال، شماره سوال در ورد است.
-اجرا (محلی):  python collector.py --collect --build
+اجرا:  python collector.py --collect --build --limit 1000
+       python collector.py --recheck-missing [N] --build
 در GitHub Actions با Secretها اجرا می‌شود؛ هیچ رمزی در کد نیست.
 """
 import argparse
@@ -35,30 +46,61 @@ import json
 import os
 import re
 import sys
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import yaml
 
 TEHRAN = ZoneInfo("Asia/Tehran")
 STATE_PATH = "data/state.json"
-IMAGES_DIR = "data/images"
+IMAGES_DIR = "out/images"
+FILES_DIR = "data/files"
 
 try:
     from telethon import TelegramClient
     from telethon.sessions import StringSession
-    from telethon.errors import FloodWaitError
+    from telethon.errors import FloodWaitError, RPCError
     from telethon.tl.types import (
         MessageMediaPoll, MessageMediaPhoto, MessageMediaDocument,
         MessageEntityBold, MessageEntityItalic, MessageEntityUnderline,
-        MessageEntityStrike, ChannelParticipantsAdmins,
+        MessageEntityStrike, MessageEntityTextUrl,
+        ChannelParticipantsAdmins, PeerUser, PeerChannel, PeerChat,
     )
-    from telethon.tl.functions.channels import GetFullChannelRequest
+    from telethon.tl.functions.channels import GetFullChannelRequest, GetParticipantsRequest
     from telethon.tl.functions.messages import SendVoteRequest
 except ImportError:
     print("Telethon نصب نیست: pip install -r requirements.txt")
     sys.exit(1)
 
+# --- ثابت‌های استخراج (از اسکریپت‌های خودت) ---
+PREVIOUS_MESSAGE_QUESTIONS = {1055, 869, 809, 1367, 665, 658, 46, 719}
+MAX_ADMIN_MESSAGES_QUIZ = 7
+MAX_ADMIN_MESSAGES_VISUAL = 9
+SCAN_LIMIT_QUIZ = 30
+SCAN_LIMIT_VISUAL = 40
+ONLY_SAME_ADMIN = True
+START_AT_FIRST_ADMIN_COMMENT = True
+FALLBACK_FIRST_COMMENTER = True
+INCLUDE_COMMENT_MEDIA = False
+USE_REPLY_RULE = True
+ALWAYS_ADMIN_USER_IDS = {136817688, 1087968824}
+DOWNLOAD_PDFS = True
+MAX_PDF_MB = 30
+SAVE_EVERY = 50
+OPTION_LABELS = ["الف", "ب", "ج", "د", "ه", "و", "ز", "ح"]
+PERSIAN_LETTER_MAP = {"الف": 1, "ب": 2, "ج": 3, "د": 4, "ه": 5, "و": 6, "ز": 7, "ح": 8}
+ENGLISH_LETTER_MAP = {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5, "f": 6, "g": 7, "h": 8}
+
+
+def log_error(msg):
+    print(f"خطا: {msg}")
+
+
+def log_info(msg):
+    print(msg)
+
+
+# ---------- config / state ----------
 
 def load_config():
     with open("config.yaml", encoding="utf-8") as f:
@@ -97,24 +139,104 @@ def week_key_for(dt_tehran):
     return start.isoformat()
 
 
+# ---------- متن ----------
+
+def normalize_digits(text):
+    if not text:
+        return ""
+    persian = "۰۱۲۳۴۵۶۷۸۹"
+    arabic = "٠١٢٣٤٥٦٧٨٩"
+    western = "0123456789"
+    return text.translate(str.maketrans(persian + arabic, western + western))
+
+
+def find_answer_index(text):
+    """حالت پشتیبان: تشخیص جواب از روی متن کامنت‌ها"""
+    if not text:
+        return None
+    normalized = normalize_digits(text)
+    patterns = [
+        r"گزینه\s*(?:ی)?\s*([1-8])",
+        r"گزینه\s*(?:ی|‌ی)?\s*(الف|ب|ج|د|ه|و|ز|ح)",
+        r"پاسخ\s*(?:صحیح)?\s*[:\-،]?\s*(الف|ب|ج|د|ه|و|ز|ح)\b",
+        r"پاسخ\s*(?:صحیح)?\s*[:\-،]?\s*([1-8])\b",
+        r"جواب\s*(?:صحیح)?\s*[:\-،]?\s*(الف|ب|ج|د|ه|و|ز|ح)\b",
+        r"جواب\s*(?:صحیح)?\s*[:\-،]?\s*([1-8])\b",
+        r"answer\s*[:\-]?\s*(?:is|option)?\s*([A-Ha-h])\b",
+        r"answer\s*[:\-]?\s*(?:is|option)?\s*([1-8])\b",
+        r"correct\s*(?:answer)?\s*[:\-]?\s*(?:option)?\s*([1-8])\b",
+        r"correct\s*(?:answer)?\s*[:\-]?\s*(?:option)?\s*([A-Ha-h])\b",
+        r"[✔✅☑✓]\uFE0F?\s*([1-8])",
+    ]
+    for pat in patterns:
+        m = re.search(pat, normalized, flags=re.IGNORECASE)
+        if m:
+            token = m.group(1)
+            if token in PERSIAN_LETTER_MAP:
+                return PERSIAN_LETTER_MAP[token]
+            if token.lower() in ENGLISH_LETTER_MAP:
+                return ENGLISH_LETTER_MAP[token.lower()]
+            if token.isdigit():
+                return int(token)
+    return None
+
+
+def parse_channel_number(question_text):
+    """
+    شماره‌ی سوال را از ابتدای متن خودِ کوییز می‌خواند (مثلاً '1773. #روان ...').
+    خط اول بررسی می‌شود؛ فقط اگر خط اول فقط هشتگ بود (مثل '#CCU') خط دوم هم دیده
+    می‌شود. به این ترتیب فهرست‌های شماره‌دار داخل متن سوال اشتباه گرفته نمی‌شوند.
+    """
+    t = normalize_digits(question_text or "")
+    lines = [ln for ln in t.split("\n") if ln.strip()]
+    pattern = r"\s*(?:#\S+\s+)*(?:سوال|تست|شماره)?\s*[#(\[]?(\d{1,5})\s*[\.\-–—:)\]]"
+    for ln in lines[:2]:
+        m = re.match(pattern, ln)
+        if m:
+            return int(m.group(1))
+        if not re.fullmatch(r"\s*(?:#\S+\s*)+", ln):
+            break
+    return None
+
+
 def parse_printed_number(text):
+    """(شماره چاپ‌شده، متن سوال بدون پیشوند شماره) — برای ورد، شماره در
+    تیتر «سوال N» می‌آید و اول متن سوال تکرار نمی‌شود."""
     if not text:
         return None, text
-    m = re.match(r"^\s*(\d{1,5})\s*[.\-–:]\s*", text)
-    if not m:
+    num = parse_channel_number(text)
+    if num is None:
         return None, text
-    return int(m.group(1)), text[m.end():]
+    # پیشوند شماره معمولاً ابتدای متن است (با هشتگ‌های اختیاری قبلش)؛
+    # همان‌جا حذف می‌شود و entities سوال با همان مقدار جابه‌جا می‌شوند.
+    m = re.match(
+        r"\s*(?:#\S+\s+)*(?:سوال|تست|شماره)?\s*[#(\[]?\d{1,5}\s*[\.\-–—:)\]]",
+        normalize_digits(text),
+    )
+    if m:
+        stripped = text[m.end():].lstrip()
+        return num, stripped
+    return num, text
 
-
-# ---------- سگمنت‌های بولد/ایتالیک (UTF-16 مثل تلگرام) ----------
 
 def message_to_segments(text, entities):
+    """
+    offset در تلگرام بر اساس UTF-16 است، پس همان‌طور محاسبه می‌شود.
+    بولد، ایتالیک، زیرخط، خط‌خورده و لینک‌های مخفی (TextUrl) حفظ می‌شوند.
+    """
     if not text:
         return []
     raw = text.encode("utf-16-le")
     n = len(raw) // 2
     flags = [0] * n
+    urls = [None] * n
     for ent in entities or []:
+        start = max(0, ent.offset)
+        end = min(n, ent.offset + ent.length)
+        if isinstance(ent, MessageEntityTextUrl):
+            for k in range(start, end):
+                urls[k] = ent.url
+            continue
         if isinstance(ent, MessageEntityBold):
             bit = 1
         elif isinstance(ent, MessageEntityItalic):
@@ -125,20 +247,24 @@ def message_to_segments(text, entities):
             bit = 8
         else:
             continue
-        for k in range(max(0, ent.offset), min(n, ent.offset + ent.length)):
+        for k in range(start, end):
             flags[k] |= bit
-    out, i = [], 0
+
+    segments = []
+    i = 0
     while i < n:
         j = i
-        while j < n and flags[j] == flags[i]:
+        while j < n and flags[j] == flags[i] and urls[j] == urls[i]:
             j += 1
         chunk = raw[i * 2:j * 2].decode("utf-16-le", errors="ignore")
         if chunk:
             f = flags[i]
-            out.append({"t": chunk, "b": bool(f & 1), "i": bool(f & 2),
-                        "u": bool(f & 4), "s": bool(f & 8)})
+            segments.append(
+                {"t": chunk, "b": bool(f & 1), "i": bool(f & 2), "u": bool(f & 4),
+                 "s": bool(f & 8), "url": urls[i]}
+            )
         i = j
-    return out
+    return segments
 
 
 def segments_from(obj):
@@ -153,147 +279,255 @@ def seg_text(segments):
     return "".join(s.get("t", "") for s in (segments or []))
 
 
-# ---------- ادمین ----------
+def extract_text(obj):
+    if obj is None:
+        return ""
+    if isinstance(obj, str):
+        return obj
+    if hasattr(obj, "text"):
+        return obj.text
+    return str(obj)
 
-def _all_sender_ids(msg):
-    ids = set()
+
+# ---------- ادمین‌ها و کامنت‌ها (از اسکریپت‌های خودت) ----------
+
+def sender_key(msg):
+    """
+    هویت فرستنده: ('u', id) برای حساب کاربری، ('c', id) برای کانال/گروه
+    (یعنی پیامی که با «نام و عکس پروفایل گروه» ارسال شده).
+    علت باگ قبلی: تلگرام شناسه‌ی گروه/کانال را با پیشوند 100- برمی‌گرداند و با
+    شناسه‌ی ساده مقایسه نمی‌شد؛ این تابع هر دو را یکسان می‌کند.
+    """
+    fid = getattr(msg, "from_id", None)
+    if isinstance(fid, PeerUser):
+        return ("u", fid.user_id)
+    if isinstance(fid, PeerChannel):
+        return ("c", fid.channel_id)
+    if isinstance(fid, PeerChat):
+        return ("c", fid.chat_id)
     sid = getattr(msg, "sender_id", None)
-    if isinstance(sid, int):
-        ids.add(sid)
-    sender = getattr(msg, "sender", None)
-    if sender is not None and isinstance(getattr(sender, "id", None), int):
-        ids.add(sender.id)
-    chat = getattr(msg, "sender_chat", None)
-    if chat is not None and isinstance(getattr(chat, "id", None), int):
-        ids.add(chat.id)
-    from_id = getattr(msg, "from_id", None)
-    if from_id is not None:
-        for attr in ("user_id", "channel_id", "chat_id"):
-            v = getattr(from_id, attr, None)
-            if isinstance(v, int):
-                ids.add(v)
-    return ids
+    if sid is None:
+        return ("anon", 0)   # فرستنده مشخص نیست (معمولاً ادمین ناشناس / پروفایل گروه)
+    if sid > 0:
+        return ("u", sid)
+    s = str(-sid)
+    if s.startswith("100") and len(s) > 10:
+        return ("c", int(s[3:]))
+    return ("c", -sid)
 
 
-def admin_identity(msg):
-    chat = getattr(msg, "sender_chat", None)
-    if chat is not None and isinstance(getattr(chat, "id", None), int):
-        return ("chat", chat.id)
-    sid = getattr(msg, "sender_id", None)
-    if isinstance(sid, int):
-        return ("user", sid)
-    sender = getattr(msg, "sender", None)
-    if sender is not None and isinstance(getattr(sender, "id", None), int):
-        return ("user", sender.id)
-    return ("unknown", None)  # پیام بدون فرستنده در گروه = ادمین ناشناس
+def entity_label(ent):
+    title = getattr(ent, "title", None)
+    if title:
+        return f"{title} (گروه/کانال)"
+    name = " ".join(p for p in (getattr(ent, "first_name", None), getattr(ent, "last_name", None)) if p)
+    uname = getattr(ent, "username", None)
+    if uname:
+        name = f"{name} @{uname}".strip()
+    return name.strip() or "؟"
 
 
-def is_admin_message(msg, admin_user_ids, admin_chat_ids):
-    if admin_user_ids is None:
-        return True
-    ids = _all_sender_ids(msg)
-    # پیام بدون هیچ شناسه‌ای (ادمین ناشناس گروه) هم ادمین حساب می‌شود
-    if not ids:
-        return True
-    return bool(ids & set(admin_user_ids)) or bool(ids & set(admin_chat_ids))
+async def _admin_ids_of(client, target):
+    """
+    شناسه‌ی همه‌ی ادمین‌ها را مستقیم از لیست شرکت‌کنندگان می‌خواند. با این روش
+    ادمین‌های «Deleted Account» (حساب حذف‌شده) هم شناسایی می‌شوند، چون فقط به شناسه
+    نیاز داریم نه به اطلاعات حساب. ربات‌ها (مثل ربات‌های نگهبان) جدا نگه داشته می‌شوند.
+    """
+    admins, bots, labels = set(), set(), {}
+    offset = 0
+    for _ in range(100):
+        res = await client(GetParticipantsRequest(
+            channel=target, filter=ChannelParticipantsAdmins(), offset=offset, limit=100, hash=0))
+        participants = getattr(res, "participants", None) or []
+        if not participants:
+            break
+        users = {u.id: u for u in (getattr(res, "users", None) or [])}
+        for p in participants:
+            uid = getattr(p, "user_id", None)
+            if uid is None:
+                continue
+            u = users.get(uid)
+            if u is not None and getattr(u, "bot", False):
+                bots.add(uid)
+                labels[uid] = f"{entity_label(u)} (ربات - کنار گذاشته شد)"
+                continue
+            admins.add(uid)
+            if u is None or getattr(u, "deleted", False):
+                labels[uid] = f"حساب حذف‌شده ({uid})"
+            else:
+                labels[uid] = entity_label(u)
+        offset += len(participants)
+    return admins, bots, labels
 
 
-async def collect_admin_ids(client, entity):
-    admin_user_ids, admin_chat_ids = set(), {entity.id}
+async def collect_admin_keys(client, entity, extra_admins):
+    """
+    هویت ادمین‌ها را جمع می‌کند: ادمین‌های کانال و گروه Discussion (حتی حساب‌های
+    حذف‌شده)، خودِ کانال و خودِ گروه (ارسال با نام/پروفایل گروه)، و هر یوزرنیم/آیدی
+    که دستی داده شده باشد. ربات‌های ادمین (مثل نگهبان) ادمین حساب نمی‌شوند.
+    خروجی: (مجموعه هویت‌ها, آیا ادمین واقعی پیدا شد, لیست نام‌ها)
+    """
+    keys = {("c", entity.id)}
+    keys.update(("u", uid) for uid in ALWAYS_ADMIN_USER_IDS)
+    names = {}
+    found_real_admin = False
     targets = [entity]
+
     try:
         full = await client(GetFullChannelRequest(entity))
         linked_id = getattr(full.full_chat, "linked_chat_id", None)
         if linked_id:
-            admin_chat_ids.add(linked_id)
+            keys.add(("c", linked_id))
             linked = next((c for c in full.chats if c.id == linked_id), None)
             if linked is not None:
                 targets.append(linked)
     except Exception as e:
-        print(f"هشدار: گروه Discussion پیدا نشد: {e}")
+        log_error(f"خطا در پیدا کردن گروه Discussion: {e}")
+
     for target in targets:
         try:
-            async for user in client.iter_participants(target, filter=ChannelParticipantsAdmins):
-                admin_user_ids.add(user.id)
+            admins, bots, labels = await _admin_ids_of(client, target)
+            for uid in admins:
+                keys.add(("u", uid))
+                found_real_admin = True
+            for uid, lb in labels.items():
+                names[("u", uid)] = lb
         except Exception as e:
-            print(f"هشدار: لیست ادمین‌ها خوانده نشد: {e}")
-    return admin_user_ids, admin_chat_ids
+            log_error(f"خطا در گرفتن لیست ادمین‌ها: {e}")
+
+    for ident in extra_admins:
+        try:
+            ref = int(ident) if str(ident).lstrip("-").isdigit() else ident
+            ent = await client.get_entity(ref)
+            kind = "c" if getattr(ent, "title", None) else "u"
+            keys.add((kind, ent.id))
+            names[(kind, ent.id)] = entity_label(ent)
+            found_real_admin = True
+        except Exception as e:
+            print(f"هشدار: ادمین دستی '{ident}' پیدا نشد.")
+            log_error(f"خطا در پیدا کردن ادمین دستی {ident}: {e}")
+
+    return keys, found_real_admin, list(names.values())
 
 
-def select_admin_run(comments, admin_user_ids, admin_chat_ids, post_id, max_n=7):
-    """قانون متوالی ادمین؛ برمی‌گرداند (run, stopped_reason, first_is_admin)."""
+def reply_target_id(msg):
+    rt = getattr(msg, "reply_to", None)
+    return getattr(rt, "reply_to_msg_id", None) if rt else None
+
+
+def find_root_id(comments):
+    """شناسه‌ی پیام اصلی (خودِ پست در گروه Discussion) را از روی ریپلای‌ها پیدا می‌کند"""
+    counts = {}
+    for c in comments:
+        rt = getattr(c, "reply_to", None)
+        if not rt:
+            continue
+        rid = getattr(rt, "reply_to_top_id", None) or getattr(rt, "reply_to_msg_id", None)
+        if rid:
+            counts[rid] = counts.get(rid, 0) + 1
+    return max(counts, key=counts.get) if counts else None
+
+
+def select_admin_run(comments, admin_keys, max_run):
+    """
+    از لیست کامنت‌ها (قدیمی به جدید) اولین دنباله‌ی متوالی پیام‌های ادمین را
+    (حداکثر max_run) برمی‌گرداند:
+      - از اولین پیام ادمینی شروع می‌شود که روی خودِ پست/تست ریپلی شده باشد
+      - ادامه می‌دهد تا وقتی پیام ادمین (همان ادمین) پشت سر هم باشد و هر پیام
+        یا روی خودِ پست ریپلی شده باشد یا روی پیام قبلیِ همان ادمین
+      - به محض اینکه پیام یک نفر دیگر بیاید، دنباله قطع می‌شود
+      - ادمین‌هایی که روی کامنت بقیه ریپلی کرده‌اند نادیده گرفته می‌شوند
+    اگر admin_keys برابر None باشد، فرستنده‌ی اولین کامنت به‌عنوان ادمین فرض می‌شود.
+    """
     if not comments:
-        return [], "no_comments", False
+        return []
+
+    by_id = {c.id: c for c in comments}
+    root_id = find_root_id(comments)
+
+    def is_admin(msg):
+        k = sender_key(msg)
+        if admin_keys is None:
+            return k is not None and k == sender_key(comments[0])
+        # فقط ادمین‌ها می‌توانند با نام کانال/گروه پیام بفرستند، پس هر فرستنده از نوع
+        # کانال/گروه/ناشناس (حتی اگر شناسه‌اش در لیست نباشد) ادمین حساب می‌شود
+        return k in admin_keys or (k is not None and k[0] in ("c", "anon"))
+
+    def replies_to_root(msg):
+        if not USE_REPLY_RULE:
+            return True
+        tgt = reply_target_id(msg)
+        return tgt is None or tgt == root_id
+
+    def replies_ok(msg, ident):
+        if replies_to_root(msg):
+            return True
+        parent = by_id.get(reply_target_id(msg))
+        if parent is None:
+            return False
+        if ONLY_SAME_ADMIN:
+            return sender_key(parent) == ident
+        return is_admin(parent)
+
     start = None
     for idx, c in enumerate(comments):
-        rt = getattr(c, "reply_to", None)
-        parent = getattr(rt, "reply_to_msg_id", None) if rt is not None else None
-        if is_admin_message(c, admin_user_ids, admin_chat_ids) and parent == post_id:
+        if is_admin(c) and replies_to_root(c):
             start = idx
             break
+        if not START_AT_FIRST_ADMIN_COMMENT:
+            break
     if start is None:
-        return [], "no_admin_found", False
-    first_key = admin_identity(comments[start])
-    run, run_ids = [], set()
+        return []
+
+    ident = sender_key(comments[start])
+    run = []
     for c in comments[start:]:
-        if len(run) >= max_n:
-            return run, "cap_reached_7", True
-        if not is_admin_message(c, admin_user_ids, admin_chat_ids):
-            return run, "interrupted_by_non_admin", True
-        if admin_identity(c) != first_key:
-            return run, "interrupted_by_other_admin", True
-        rt = getattr(c, "reply_to", None)
-        parent = getattr(rt, "reply_to_msg_id", None) if rt is not None else None
-        if parent == post_id or parent in run_ids:
-            run.append(c); run_ids.add(c.id)
-        else:
-            return run, "interrupted_by_admin_reply_to_other", True
-    return run, "end_of_comments", True
-
-
-def select_first_commenter_run(comments, post_id, max_n=7):
-    """فالبک: همان قانون متوالی روی اولین کامنت‌گذار (وقتی ادمین نیست)."""
-    if not comments:
-        return []
-    first = comments[0]
-    rt = getattr(first, "reply_to", None)
-    if getattr(rt, "reply_to_msg_id", None) != post_id:
-        return []
-    key = admin_identity(first)
-    run, run_ids = [], set()
-    for c in comments:
-        if len(run) >= max_n:
+        if len(run) >= max_run:
             break
-        if admin_identity(c) != key:
+        if not is_admin(c):
             break
-        rt = getattr(c, "reply_to", None)
-        parent = getattr(rt, "reply_to_msg_id", None) if rt is not None else None
-        if parent == post_id or parent in run_ids:
-            run.append(c); run_ids.add(c.id)
-        else:
+        if ONLY_SAME_ADMIN and sender_key(c) != ident:
             break
+        if not replies_ok(c, ident):
+            break
+        run.append(c)
     return run
 
 
-PERSIAN_LETTER_MAP = {"الف": 1, "ب": 2, "ج": 3, "د": 4, "ه": 5, "و": 6, "ز": 7, "ح": 8}
+async def fetch_comments(client, entity, post_id, scan_limit):
+    msgs = []
+    try:
+        async for reply in client.iter_messages(
+            entity, reply_to=post_id, reverse=True, limit=scan_limit
+        ):
+            if getattr(reply, "action", None):
+                continue
+            msgs.append(reply)
+    except FloodWaitError:
+        raise
+    except Exception as e:
+        log_error(f"خطا در خواندن کامنت‌های پست {post_id}: {e}")
+    return msgs
 
 
-def guess_answer_from_text(text):
-    """فقط حدس علامت‌دار از متن کامنت؛ جواب اصلی نیست."""
-    if not text:
-        return None
-    norm = text.translate(str.maketrans("۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩", "0123456789" * 2))
-    for pat in [r"گزینه\s*(?:ی)?\s*([1-8])", r"پاسخ\s*(?:صحیح)?\s*[:\-،]?\s*(الف|ب|ج|د|ه|و|ز|ح)\b",
-                r"جواب\s*(?:صحیح)?\s*[:\-،]?\s*([1-8])\b"]:
-        m = re.search(pat, norm)
-        if m:
-            tok = m.group(1)
-            if tok in PERSIAN_LETTER_MAP:
-                return PERSIAN_LETTER_MAP[tok]
-            if tok.isdigit():
-                return int(tok)
-    return None
+async def fetch_unit_comments(client, entity, unit, scan_limit):
+    """
+    برای آلبوم، کامنت‌ها روی یکی از پیام‌های آلبوم قرار دارد؛
+    پیامی که تعداد کامنتش بیشتر از صفر است انتخاب می‌شود.
+    """
+    with_info = [m for m in unit if getattr(m, "replies", None) is not None]
+    if with_info:
+        candidates = [m for m in with_info if (m.replies.replies or 0) > 0]
+    else:
+        candidates = list(unit)
+    for m in candidates:
+        msgs = await fetch_comments(client, entity, m.id, scan_limit)
+        if msgs:
+            return msgs
+    return []
 
+
+# ---------- جواب صحیح و توضیح داخل کوییز (از خود تلگرام) ----------
 
 def correct_index_from_results(poll_obj, results):
     if not results or not getattr(results, "results", None):
@@ -305,46 +539,63 @@ def correct_index_from_results(poll_obj, results):
     return None
 
 
-async def get_correct_answer(client, entity, message, poll_obj, allow_vote):
-    """جواب صحیح از خود نظرسنجی. اگر نتیجه هنوز دیده نمی‌شود و
-    allow_vote فعال است (با اجازه امیررضا، 2026-11-17)، یک رای به
-    گزینه اول می‌دهد تا تلگرام جواب صحیح را نشان دهد؛ نتیجه رای
-    برای او مهم نیست. برمی‌گرداند (index, source) با source یکی از
-    'poll' یا 'poll_vote' یا None."""
-    idx = correct_index_from_results(poll_obj, getattr(message.poll, "results", None))
+def poll_solution_segments(results):
+    """توضیح داخل خودِ کوییز (علامت لامپ) که بعد از پاسخ‌دادن آشکار می‌شود"""
+    if results is None:
+        return []
+    sol = getattr(results, "solution", None)
+    if not sol:
+        return []
+    return message_to_segments(sol, getattr(results, "solution_entities", None))
+
+
+async def get_quiz_info(client, entity, message, poll_obj, allow_vote):
+    """
+    خروجی: (شماره‌ی گزینه‌ی صحیح یا None, توضیح داخل کوییز).
+    اگر کوییز هنوز پاسخ داده نشده باشد و allow_vote فعال باشد (با اجازه
+    امیررضا، 2026-11-17)، یک گزینه انتخاب می‌شود تا تلگرام جواب
+    و توضیح را آشکار کند؛ نتیجه رای برای او مهم نیست.
+    """
+    res = getattr(message.poll, "results", None)
+    idx = correct_index_from_results(poll_obj, res)
     if idx:
-        return idx, "poll"
-    if not getattr(poll_obj, "quiz", False):
-        return None, None
-    if getattr(poll_obj, "closed", False) or not poll_obj.answers:
-        return None, None
+        return idx, poll_solution_segments(res)
+
+    if not getattr(poll_obj, "quiz", False) or not poll_obj.answers or getattr(poll_obj, "closed", False):
+        return None, poll_solution_segments(res)
+
     if not allow_vote:
-        return None, None
+        return None, poll_solution_segments(res)
+
+    vote_result = None
     try:
-        result = await client(SendVoteRequest(
-            peer=entity, msg_id=message.id, options=[poll_obj.answers[0].option]))
-        for upd in getattr(result, "updates", None) or []:
-            if hasattr(upd, "results") and hasattr(upd, "poll_id"):
-                idx = correct_index_from_results(poll_obj, upd.results)
-                if idx:
-                    return idx, "poll_vote"
+        vote_result = await client(
+            SendVoteRequest(peer=entity, msg_id=message.id, options=[poll_obj.answers[0].option])
+        )
     except FloodWaitError:
         raise
     except Exception as e:
-        print(f"خطا در رای‌دادن به پیام {getattr(message, 'id', '?')}: {e}")
-        return None, None
+        log_error(f"خطا در رای‌دادن به پیام {message.id} (شاید قبلاً رای داده شده): {e}")
+
+    for upd in getattr(vote_result, "updates", None) or []:
+        if hasattr(upd, "results") and hasattr(upd, "poll_id"):
+            idx = correct_index_from_results(poll_obj, upd.results)
+            if idx:
+                return idx, poll_solution_segments(upd.results)
+
     try:
         fresh = await client.get_messages(entity, ids=message.id)
         if fresh and fresh.poll:
-            idx = correct_index_from_results(poll_obj, fresh.poll.results)
-            if idx:
-                return idx, "poll_vote"
+            r = fresh.poll.results
+            return correct_index_from_results(poll_obj, r), poll_solution_segments(r)
     except FloodWaitError:
         raise
     except Exception as e:
-        print(f"خطا در خواندن مجدد نتیجه نظرسنجی {getattr(message, 'id', '?')}: {e}")
-    return None, None
+        log_error(f"خطا در خواندن مجدد نتیجه نظرسنجی {message.id}: {e}")
+    return None, []
 
+
+# ---------- پیام‌های زمینه‌ای: ریپلای و پیام بالای سوال ----------
 
 def _has_photo(msg):
     media = getattr(msg, "media", None)
@@ -360,60 +611,203 @@ def _msg_text(msg):
     return getattr(msg, "raw_text", None) or getattr(msg, "text", "") or ""
 
 
-async def fetch_comments(client, entity, post_id, limit=200):
-    msgs = []
-    try:
-        async for reply in client.iter_messages(entity, reply_to=post_id, reverse=True, limit=limit):
-            if getattr(reply, "action", None):
-                continue
-            msgs.append(reply)
-    except FloodWaitError:
-        raise
-    except Exception as e:
-        print(f"خطا در خواندن کامنت‌های پست {post_id}: {e}")
-    return msgs
+async def fetch_replied_unit(client, entity, message):
+    """پیامی (یا آلبومی) که کوییز روی آن ریپلی شده است؛ بخشی از صورت سوال"""
+    rt = getattr(message, "reply_to", None)
+    rid = getattr(rt, "reply_to_msg_id", None) if rt else None
+    if not rid:
+        return []
+    if getattr(rt, "reply_to_peer_id", None) is not None:
+        return []   # ریپلای روی پیامی از چت دیگر
+    target = await client.get_messages(entity, ids=rid)
+    if not target or getattr(target, "action", None):
+        return []
+    if target.poll:
+        log_info(f"کوییز {message.id} روی یک نظرسنجی دیگر ریپلی شده؛ نادیده گرفته شد.")
+        return []
+    if target.grouped_id:
+        neighbors = await client.get_messages(entity, ids=list(range(max(1, rid - 9), rid + 10)))
+        unit = [m for m in neighbors if m and getattr(m, "grouped_id", None) == target.grouped_id]
+        unit.sort(key=lambda m: m.id)
+        return unit or [target]
+    return [target]
 
 
-async def download_stem_image(client, msg, key):
-    if not _has_photo(msg):
-        return None
-    media = msg.media
-    ext = ".png" if isinstance(media, MessageMediaDocument) and getattr(getattr(msg, "file", None), "mime_type", None) == "image/png" else ".jpg"
-    os.makedirs(IMAGES_DIR, exist_ok=True)
-    path = os.path.join(IMAGES_DIR, f"{key}{ext}")
+async def fetch_previous_unit(client, entity, message_id):
+    """پیام (یا آلبومِ) دقیقاً بالای کوییز در کانال"""
+    older = []
+    async for m in client.iter_messages(entity, max_id=message_id, limit=12):
+        if getattr(m, "action", None):
+            continue
+        older.append(m)
+    if not older:
+        return []
+    first = older[0]
+    if first.poll:
+        return []
+    if first.grouped_id:
+        unit = [m for m in older if m.grouped_id == first.grouped_id]
+    else:
+        unit = [first]
+    unit.sort(key=lambda m: m.id)
+    return unit
+
+
+async def download_image(client, msg, stem, ext):
+    path = os.path.join(IMAGES_DIR, f"{stem}{ext}")
     if os.path.exists(path):
-        return path
+        return [{"type": "image", "path": path}]
     try:
-        return await client.download_media(msg, file=path)
+        os.makedirs(IMAGES_DIR, exist_ok=True)
+        saved = await client.download_media(msg, file=path)
+        if saved:
+            return [{"type": "image", "path": saved}]
     except FloodWaitError:
         raise
     except Exception as e:
-        print(f"خطا در دانلود عکس {key}: {e}")
-        return None
+        log_error(f"خطا در دانلود تصویر {stem}: {e}")
+    return [{"type": "note", "text": "[تصویری در این پیام بود که دانلود نشد]"}]
 
 
-def explanation_items_from_run(run):
+async def media_items(client, msg, stem, link=None):
+    media = msg.media
+    if media is None:
+        return []
+
+    if isinstance(media, MessageMediaPhoto):
+        return await download_image(client, msg, stem, ".jpg")
+
+    if isinstance(media, MessageMediaDocument):
+        if getattr(msg, "sticker", None):
+            return []
+        f = msg.file
+        mime = (f.mime_type or "") if f else ""
+        name = (f.name or "") if f else ""
+        size = (f.size or 0) if f else 0
+
+        if mime in ("image/jpeg", "image/png"):
+            return await download_image(client, msg, stem, ".png" if mime == "image/png" else ".jpg")
+
+        if mime == "application/pdf" and DOWNLOAD_PDFS and size <= MAX_PDF_MB * 1024 * 1024:
+            os.makedirs(FILES_DIR, exist_ok=True)
+            path = os.path.join(FILES_DIR, f"{stem}.pdf")
+            try:
+                if not os.path.exists(path):
+                    await client.download_media(msg, file=path)
+                return [{"type": "note",
+                         "text": f"[فایل PDF ضمیمه: {name or 'PDF'}]"}]
+            except FloodWaitError:
+                raise
+            except Exception as e:
+                log_error(f"خطا در دانلود PDF {stem}: {e}")
+
+        if getattr(msg, "video", None) or getattr(msg, "video_note", None) or getattr(msg, "gif", None):
+            kind = "ویدیو"
+        elif getattr(msg, "voice", None) or getattr(msg, "audio", None):
+            kind = "صوت"
+        else:
+            kind = "فایل"
+        text = f"[{kind} ضمیمه: {name}]" if name else f"[{kind} ضمیمه]"
+        if link:
+            text += f" — لینک پیام: {link}"
+        return [{"type": "note", "text": text}]
+
+    return []
+
+
+def text_items(msg):
+    segments = message_to_segments(msg.raw_text or "", msg.entities)
+    if segments and any(s["t"].strip() for s in segments):
+        return [{"type": "text", "segments": segments}]
+    return []
+
+
+async def unit_content(client, unit, stem, base_link):
+    """محتوای کامل یک پیام/آلبوم: اول رسانه‌ها (عکس، PDF، ...) بعد متن با قالب‌بندی"""
     items = []
-    for c in run:
-        segs = message_to_segments(c.raw_text or "", c.entities)
-        if segs and any(s["t"].strip() for s in segs):
-            items.append({"type": "text", "segments": segs})
-        elif _has_photo(c):
-            items.append({"type": "image", "text": "فقط عکس بود"})
-    if items and all(i["type"] == "image" for i in items):
-        items = [{"type": "text", "segments": [{"t": "فقط عکس بود", "b": False}]}]
+    for m in unit:
+        items.extend(await media_items(client, m, f"{stem}{m.id}", f"{base_link}/{m.id}"))
+    for m in unit:
+        items.extend(text_items(m))
     return items
 
 
-async def process_poll(client, entity, message, admin_user_ids, admin_chat_ids, cfg, source_id, source=None):
+def explanation_items_from_run(run):
+    """متن کامنت‌های ادمین؛ کامنتی که فقط عکس بود «فقط عکس بود» می‌شود.
+    عکس کامنت هرگز دانلود نمی‌شود (INCLUDE_COMMENT_MEDIA=False)."""
+    items = []
+    for c in run:
+        parts = text_items(c)
+        if parts:
+            items.extend(parts)
+        elif _has_photo(c):
+            items.append({"type": "image", "text": "فقط عکس بود"})
+    return items
+
+
+# ---------- پردازش یک سوال / یک پست تصویری ----------
+
+UNRECOGNIZED = {}   # فرستنده‌هایی که کامنت اولشان ادمین/معتبر حساب نشد (برای عیب‌یابی)
+
+
+def sender_name(msg):
+    s = getattr(msg, "sender", None)
+    return entity_label(s) if s is not None else "؟"
+
+
+def describe_comment(c, count):
+    """توصیف کوتاه اولین کامنت برای عیب‌یابی در گزارش"""
+    fid = getattr(c, "from_id", None)
+    who = None
+    if fid is not None:
+        who = getattr(fid, "user_id", None) or getattr(fid, "channel_id", None) or getattr(fid, "chat_id", None)
+    rt = getattr(c, "reply_to", None)
+    return (f"{count} کامنت؛ اولی: from_id={type(fid).__name__ if fid is not None else None}:{who} "
+            f"reply_to={getattr(rt, 'reply_to_msg_id', None)} top={getattr(rt, 'reply_to_top_id', None)}")
+
+
+def _stem_from_context(context):
+    """اولین گروه زمینه‌ای را به شکل stem تخت (سازگار با state قدیمی) برمی‌گرداند."""
+    if not context:
+        return None
+    g = context[0]
+    text = ""
+    segments = []
+    photo_path = None
+    for it in g["items"]:
+        if it["type"] == "text":
+            text += seg_text(it.get("segments"))
+            segments.extend(it.get("segments") or [])
+        elif it["type"] == "image" and photo_path is None:
+            photo_path = it.get("path")
+    source = "replied_message" if g["kind"] == "reply" else "previous"
+    return {"source": source, "message_id": g["first_id"], "text": text,
+            "segments": segments, "photo_path": photo_path}
+
+
+def _first_image_path(context):
+    for g in context or []:
+        for it in g["items"]:
+            if it["type"] == "image":
+                return it.get("path")
+    return None
+
+
+async def process_poll(client, entity, message, admin_keys, base_link, previous_numbers,
+                       allow_vote, max_admin_messages):
     poll_obj = message.poll.poll
-    answer_index, answer_source = await get_correct_answer(
-        client, entity, message, poll_obj, cfg.get("allow_vote", False))
-    q_text = getattr(poll_obj.question, "text", "") or ""
-    printed, stripped = parse_printed_number(q_text)
-    # سگمنت‌ها را با جابه‌جایی entities بعد از حذف پیشوند شماره بساز،
-    # تا شماره چاپ‌شده هم در تیتر سوال باشد و هم اول متن سوال تکرار نشود.
-    prefix_len = len(q_text) - len(stripped)
+
+    answer_index, solution = await get_quiz_info(client, entity, message, poll_obj, allow_vote)
+    answer_source = None
+    if answer_index is not None:
+        # get_quiz_info جواب را از خود نظرسنجی (با رای یا بدون رای) گرفته است
+        answer_source = "poll"
+
+    question_text = extract_text(poll_obj.question)
+    options = [extract_text(a.text) for a in poll_obj.answers]
+    number, stripped = parse_printed_number(question_text)
+    # سگمنت‌های سوال با جابه‌جایی entities بعد از حذف پیشوند شماره
+    prefix_len = len(question_text) - len(stripped)
     entities = []
     for ent in getattr(poll_obj.question, "entities", None) or []:
         try:
@@ -428,227 +822,524 @@ async def process_poll(client, entity, message, admin_user_ids, admin_chat_ids, 
         if ent2.length > 0:
             entities.append(ent2)
     q_segs = message_to_segments(stripped, entities)
-    options = [(getattr(a.text, "text", "") or "") for a in poll_obj.answers]
     options_segs = [segments_from(a.text) for a in poll_obj.answers]
 
-    stem = None
-    rt = getattr(message, "reply_to", None)
-    replied_id = getattr(rt, "reply_to_msg_id", None) if rt is not None else None
-    if replied_id:
-        try:
-            replied = await client.get_messages(entity, ids=replied_id)
-            if replied and not getattr(replied, "poll", None):
-                stem = {"source": "replied_message", "message_id": replied.id,
-                        "text": _msg_text(replied),
-                        "segments": message_to_segments(_msg_text(replied), getattr(replied, "entities", None)),
-                        "photo_path": await download_stem_image(client, replied, f"stem{message.id}")}
-        except FloodWaitError:
-            raise
-        except Exception as e:
-            print(f"خطا در پیام ریپلای‌شده {message.id}: {e}")
-    if stem is None and printed in (cfg.get("preceding_stem_numbers") or []):
-        try:
-            prev = None
-            async for m in client.iter_messages(entity, offset_id=message.id, limit=1):
-                prev = m; break
-            if prev is not None and not getattr(prev, "poll", None) and (_msg_text(prev) or _has_photo(prev)):
-                stem = {"source": "preceding_message", "message_id": prev.id,
-                        "text": _msg_text(prev),
-                        "segments": message_to_segments(_msg_text(prev), getattr(prev, "entities", None)),
-                        "photo_path": await download_stem_image(client, prev, f"stem{message.id}")}
-        except FloodWaitError:
-            raise
-        except Exception as e:
-            print(f"خطا در پیام بالای {message.id}: {e}")
+    # --- صورت سوال: ریپلای + (برای شماره‌های مشخص) پیام بالای سوال ---
+    context = []
+    seen_ids = set()
+    reply_unit = await fetch_replied_unit(client, entity, message)
+    if reply_unit:
+        items = await unit_content(client, reply_unit, "ctx", base_link)
+        context.append({"first_id": reply_unit[0].id, "kind": "reply", "items": items})
+        seen_ids.update(m.id for m in reply_unit)
+    if number in previous_numbers:
+        prev_unit = await fetch_previous_unit(client, entity, message.id)
+        if prev_unit and not (seen_ids & {m.id for m in prev_unit}):
+            items = await unit_content(client, prev_unit, "ctx", base_link)
+            context.append({"first_id": prev_unit[0].id, "kind": "previous", "items": items})
 
-    comments = await fetch_comments(client, entity, message.id)
-    run, reason, from_admin = select_admin_run(
-        comments, admin_user_ids, admin_chat_ids, message.id,
-        max_n=cfg.get("max_admin_messages", 7))
-    if not run:
-        run = select_first_commenter_run(comments, message.id, max_n=cfg.get("max_admin_messages", 7))
-        from_admin = False if run else True
-    expl = explanation_items_from_run(run)
-    if answer_index is None and expl:
-        joined = "\n".join(seg_text(c.get("segments")) for c in expl if c.get("type") == "text")
-        g = guess_answer_from_text(joined)
+    # --- کامنت‌های ادمین (و در صورت نبودن ادمین، اولین کامنت‌دهنده) ---
+    comments = await fetch_comments(client, entity, message.id, SCAN_LIMIT_QUIZ)
+    run = select_admin_run(comments, admin_keys, max_admin_messages)
+    comment_source = "admin" if run else "none"
+    admin_diag = "admin" if run else ("no_comments" if not comments else "no_admin_found")
+    debug = ""
+    if comments and not run:
+        k = sender_key(comments[0])
+        rec = UNRECOGNIZED.setdefault(k, [sender_name(comments[0]), 0])
+        rec[1] += 1
+        if FALLBACK_FIRST_COMMENTER:
+            run = select_admin_run(comments, None, max_admin_messages)
+            if run:
+                comment_source = "first_person"
+                admin_diag = "first_person"
+        debug = describe_comment(comments[0], len(comments))
+
+    comments_items = explanation_items_from_run(run)
+
+    # توضیح کامل: اول توضیح داخل خود کوییز (لامپ)، بعد کامنت‌های ادمین
+    expl = []
+    if solution:
+        expl.append({"type": "text", "segments": solution})
+    expl.extend(comments_items)
+
+    if answer_index is None:
+        parts = ["".join(s["t"] for s in solution)]
+        parts += ["".join(s["t"] for s in it["segments"]) for it in comments_items if it["type"] == "text"]
+        g = find_answer_index("\n".join(parts))
         if g:
             answer_index, answer_source = g, "comment_guess"
 
     dt = (message.date or datetime.now(TEHRAN)).astimezone(TEHRAN)
+    stem = _stem_from_context(context)
     return {
-        "source": source_id, "kind": "quiz", "channel_msg_id": message.id,
+        "source": "quiz", "kind": "quiz", "channel_msg_id": message.id,
         "date": dt.date().isoformat(), "time_tehran": dt.strftime("%H:%M"),
         "week_key": week_key_for(dt),
-        "printed_number": printed, "question": stripped,
+        "printed_number": number, "question": stripped,
         "question_segments": q_segs, "options": options,
         "options_segments": options_segs,
         "answer_index": answer_index, "answer_source": answer_source,
-        "stem": stem,
-        "explanation_items": expl, "explanation_from_admin": from_admin,
-        "admin_diag": reason, "status": "pending",
-        "image_path": stem.get("photo_path") if stem else None,
+        "stem": stem, "contexts": context,
+        "explanation_items": expl,
+        "explanation_from_admin": comment_source != "first_person",
+        "admin_diag": admin_diag, "comment_source": comment_source,
+        "comments_scanned": len(comments), "debug": debug,
+        "status": "pending",
+        "image_path": _first_image_path(context),
     }
 
 
-async def process_visual(client, entity, message, admin_user_ids, admin_chat_ids, cfg, source_id, source=None):
-    text = _msg_text(message)
-    # هشتگ‌ها از منبع (source) خوانده می‌شوند، نه از ریشه config —
-    # قبلاً cfg.get("hashtags") همیشه خالی بود و ترتیب config رعایت نمی‌شد.
-    hashtags = [h for h in ((source or {}).get("hashtags") or []) if h in text]
-    # هشتگ‌های دیگر داخل متن هم نگه دار
-    for h in re.findall(r"#\S+", text):
-        if h not in hashtags:
-            hashtags.append(h)
-    comments = await fetch_comments(client, entity, message.id)
-    run, reason, from_admin = select_admin_run(
-        comments, admin_user_ids, admin_chat_ids, message.id,
-        max_n=cfg.get("max_admin_messages", 7))
-    if not run:
-        run = select_first_commenter_run(comments, message.id, max_n=cfg.get("max_admin_messages", 7))
-        from_admin = False if run else True
+async def process_visual(client, entity, unit, admin_keys, base_link, hashtags,
+                         max_admin_messages):
+    """یک پست/آلبوم تصویری: رسانه‌ها + متن + کامنت ادمین (حداکثر ۹ پیام)."""
+    combined = "\n".join((m.raw_text or "") for m in unit)
+    tags = find_tags(combined, hashtags)
+    if not tags:
+        return None
+
+    first_id = unit[0].id
+    post_items = []
+    for m in unit:
+        post_items.extend(await media_items(client, m, f"p{m.id}", f"{base_link}/{m.id}"))
+    for m in unit:
+        post_items.extend(text_items(m))
+
+    caption = ""
+    caption_segments = []
+    images, notes = [], []
+    for it in post_items:
+        if it["type"] == "text":
+            caption += seg_text(it.get("segments"))
+            caption_segments.extend(it.get("segments") or [])
+        elif it["type"] == "image":
+            images.append(it.get("path"))
+        elif it["type"] == "note":
+            notes.append(it.get("text", ""))
+
+    comments = await fetch_unit_comments(client, entity, unit, SCAN_LIMIT_VISUAL)
+    run = select_admin_run(comments, admin_keys, max_admin_messages)
+    comment_source = "admin" if run else "none"
+    admin_diag = "admin" if run else ("no_comments" if not comments else "no_admin_found")
+    debug = ""
+    if comments and not run:
+        k = sender_key(comments[0])
+        rec = UNRECOGNIZED.setdefault(k, [sender_name(comments[0]), 0])
+        rec[1] += 1
+        if FALLBACK_FIRST_COMMENTER:
+            run = select_admin_run(comments, None, max_admin_messages)
+            if run:
+                comment_source = "first_person"
+                admin_diag = "first_person"
+        debug = describe_comment(comments[0], len(comments))
+
     expl = explanation_items_from_run(run)
-    dt = (message.date or datetime.now(TEHRAN)).astimezone(TEHRAN)
-    img = await download_stem_image(client, message, f"visual{message.id}")
+
+    dt = (unit[0].date or datetime.now(TEHRAN)).astimezone(TEHRAN)
     return {
-        "source": source_id, "kind": "visual", "channel_msg_id": message.id,
+        "source": "visual", "kind": "visual", "channel_msg_id": first_id,
         "date": dt.date().isoformat(), "time_tehran": dt.strftime("%H:%M"),
         "week_key": week_key_for(dt),
-        "hashtags": hashtags, "caption": text,
-        "caption_segments": message_to_segments(text, getattr(message, "entities", None)),
-        "explanation_items": expl, "explanation_from_admin": from_admin,
-        "admin_diag": reason, "status": "pending", "image_path": img,
+        "message_ids": [m.id for m in unit],
+        "hashtags": tags, "caption": caption,
+        "caption_segments": caption_segments,
+        "image_path": images[0] if images else None,
+        "images": images, "notes": notes,
+        "explanation_items": expl,
+        "explanation_from_admin": comment_source != "first_person",
+        "admin_diag": admin_diag, "comment_source": comment_source,
+        "comments_scanned": len(comments), "debug": debug,
+        "status": "pending",
     }
 
 
-async def collect_source(client, cfg, source, state, items_by_key, limit=0):
-    channel = source["channel"]
-    if "CHANGEME" in channel:
-        print(f"رد شد: کانال {source['id']} هنوز در config.yaml تنظیم نشده ({channel})")
+def minimal_item(message):
+    """اگر پردازش کامل شکست خورد، حداقل سوال و گزینه‌ها ثبت می‌شوند"""
+    try:
+        poll_obj = message.poll.poll
+        question_text = extract_text(poll_obj.question)
+        options = [extract_text(a.text) for a in poll_obj.answers]
+    except Exception:
+        question_text, options = "(خطا در خواندن سوال)", []
+    number, stripped = parse_printed_number(question_text)
+    return {
+        "source": "quiz", "kind": "quiz", "channel_msg_id": message.id,
+        "date": (message.date or datetime.now(TEHRAN)).astimezone(TEHRAN).date().isoformat(),
+        "time_tehran": (message.date or datetime.now(TEHRAN)).astimezone(TEHRAN).strftime("%H:%M"),
+        "week_key": week_key_for((message.date or datetime.now(TEHRAN)).astimezone(TEHRAN)),
+        "printed_number": number, "question": stripped,
+        "question_segments": [], "options": options, "options_segments": [],
+        "answer_index": None, "answer_source": None,
+        "stem": None, "contexts": [],
+        "explanation_items": [], "explanation_from_admin": True,
+        "admin_diag": "error", "comment_source": "none",
+        "comments_scanned": 0, "debug": "خطا در پردازش",
+        "status": "pending", "image_path": None,
+    }
+
+
+async def retry_flood(factory):
+    while True:
+        try:
+            return await factory()
+        except FloodWaitError as e:
+            print(f"\nمحدودیت تلگرام: {e.seconds} ثانیه صبر می‌کنیم ...")
+            log_error(f"FloodWaitError: {e.seconds} ثانیه")
+            await asyncio.sleep(e.seconds + 1)
+
+
+# ---------- هشتگ (از اسکریپت تصویری خودت) ----------
+
+def normalize_for_tag(s):
+    """یکسان‌سازی ی/ک عربی و فارسی، و نیم‌فاصله با خط‌زیر"""
+    return (
+        s.replace("ي", "ی")
+        .replace("ك", "ک")
+        .replace("\u200c", "_")
+        .replace("\u200f", "")
+    )
+
+
+def find_tags(text, hashtag_list):
+    if not text:
+        return []
+    t = normalize_for_tag(text)
+    found = []
+    for tag in hashtag_list or []:
+        pattern = re.escape(normalize_for_tag(tag)) + r"(?!\w)"
+        if re.search(pattern, t):
+            found.append(tag)
+    return found
+
+
+# ---------- جمع‌کردن و دوباره‌چک‌کردن (سیم‌کشی بایگانی) ----------
+
+def _channel_ref(channel):
+    """لینک/یوزرنیم کانال را به مرجعی که Telethon می‌فهمد تبدیل می‌کند"""
+    if channel is None:
+        return None
+    c = str(channel).strip()
+    if c.startswith("https://t.me/"):
+        c = c[len("https://t.me/"):].strip("/")
+    if c.startswith("t.me/"):
+        c = c[len("t.me/"):].strip("/")
+    if c.startswith("@"):
+        c = c[1:]
+    if c.lstrip("-").isdigit():
+        return int(c)
+    return c or None
+
+
+def _has_explanation(item):
+    return bool(item.get("explanation_items"))
+
+
+def _item_age_hours(item):
+    try:
+        d = datetime.fromisoformat(item.get("date", "")).date()
+        now = datetime.now(TEHRAN).date()
+        return (now - d).days * 24
+    except Exception:
         return 0
-    entity = await client.get_entity(channel)
-    admin_user_ids, admin_chat_ids = await collect_admin_ids(client, entity)
-    print(f"منبع {source['id']}: کانال {entity.id}، ادمین‌ها: {len(admin_user_ids)} نفر")
-    last_seen = state.get("last_seen", {}).get(source["id"], 0)
-    new_count = 0
-    # پست‌های جدید + پست‌های pending قدیمی برای چک دوباره
-    now = datetime.now(TEHRAN)
-    pending_ids = set()
-    for it in state["items"]:
-        if it.get("source") != source["id"] or it.get("status") != "pending":
-            continue
-        # ساده: همه pendingها را تا ۷ روز دوباره چک کن
-        pending_ids.add(it["channel_msg_id"])
 
-    async for message in client.iter_messages(entity, min_id=last_seen, reverse=True):
-        if getattr(message, "action", None):
-            continue
-        await asyncio.sleep(cfg.get("pause_between_posts", 0.4))
-        is_poll = getattr(message, "poll", None) is not None
-        if source["kind"] == "quiz" and not is_poll:
-            continue
-        if source["kind"] == "visual" and is_poll:
-            continue
-        if source["kind"] == "visual" and source.get("require_hashtag"):
-            text = _msg_text(message)
-            if not any(h in text for h in (source.get("hashtags") or [])):
-                continue
-        try:
-            if is_poll:
-                item = await process_poll(client, entity, message, admin_user_ids, admin_chat_ids, cfg, source["id"], source)
+
+def finalize_items(state, recheck_hours, recheck_missing_days):
+    """
+    نهایی‌کردن آیتم‌ها:
+      - توضیح دارد و قدیمی‌تر از recheck_hours است → final
+      - توضیح ندارد و قدیمی‌تر از recheck_missing_days روز است → final
+      - توضیح ندارد و هنوز در بازه است → pending می‌ماند تا دوباره چک شود
+    """
+    for it in state.get("items", []):
+        age_h = _item_age_hours(it)
+        if _has_explanation(it):
+            if age_h > recheck_hours:
+                it["status"] = "final"
+        else:
+            if age_h > recheck_missing_days * 24:
+                it["status"] = "final"
             else:
-                item = await process_visual(client, entity, message, admin_user_ids, admin_chat_ids, cfg, source["id"], source)
-        except FloodWaitError as e:
-            print(f"FloodWait {e.seconds} ثانیه — صبر می‌کنم")
-            await asyncio.sleep(e.seconds + 5)
-            continue
-        key = (source["id"], message.id)
-        items_by_key[key] = item
-        new_count += 1
-        state.setdefault("last_seen", {})[source["id"]] = max(state["last_seen"].get(source["id"], 0), message.id)
-        if new_count % 50 == 0:
-            _sync_state(state, items_by_key)
-        if limit and new_count >= limit:
-            print(f"سقف {limit} پست در این اجرا رسید — بقیه در اجرای بعد.")
-            break
-
-    # چک دوباره pendingها
-    for mid in sorted(pending_ids):
-        if (source["id"], mid) in items_by_key:
-            continue
-        try:
-            message = await client.get_messages(entity, ids=mid)
-            if not message:
-                continue
-            await asyncio.sleep(cfg.get("pause_between_posts", 0.4))
-            if getattr(message, "poll", None):
-                item = await process_poll(client, entity, message, admin_user_ids, admin_chat_ids, cfg, source["id"], source)
-            else:
-                item = await process_visual(client, entity, message, admin_user_ids, admin_chat_ids, cfg, source["id"], source)
-            # اگر توضیح کامل شد یا ۷ پیام رسید، نهایی کن؛ وگرنه pending بماند
-            dt = datetime.fromisoformat(item["date"]).replace(tzinfo=TEHRAN)
-            if (now - dt).total_seconds() > cfg.get("recheck_hours", 48) * 3600:
-                item["status"] = "final"
-            items_by_key[(source["id"], mid)] = item
-        except FloodWaitError as e:
-            await asyncio.sleep(e.seconds + 5)
-        except Exception as e:
-            print(f"خطا در چک دوباره {mid}: {e}")
-    _sync_state(state, items_by_key)
-    return new_count
+                it["status"] = "pending"
+    return state
 
 
-async def main_async(limit=0):
+def _seen_ids(state, source_id):
+    return {(it.get("source"), it.get("channel_msg_id"))
+            for it in state.get("items", []) if it.get("source") == source_id}
+
+
+async def collect_source(client, entity, source, admin_keys, state, limit):
+    """
+    یک منبع را از جایی که state مانده ادامه می‌دهد (iter_messages از min_id).
+    هر ۵۰ پست state ذخیره می‌شود تا اگر اجرا قطع شد، پیشرفت از دست نرود.
+    """
+    src_id = source["id"]
+    kind = source["kind"]
+    seen = _seen_ids(state, src_id)
+    last_seen = state.get("last_seen", {}).get(src_id, 0)
     cfg = load_config()
-    state = load_state()
-    items_by_key = {(i["source"], i["channel_msg_id"]): i for i in state.get("items", [])}
+    pause = float(cfg.get("pause_between_posts", 0.4))
+    allow_vote = bool(cfg.get("allow_vote", True))
+    prev_numbers = set(cfg.get("preceding_stem_numbers") or PREVIOUS_MESSAGE_QUESTIONS)
+    max_q = int(cfg.get("max_admin_messages", MAX_ADMIN_MESSAGES_QUIZ))
+    max_v = int(cfg.get("max_admin_messages_visual", MAX_ADMIN_MESSAGES_VISUAL))
+    base_link = f"https://t.me/{getattr(entity, 'username', '') or ''}".rstrip("/")
+
+    count = 0
+    processed = 0
+    if kind == "quiz":
+        async for message in client.iter_messages(entity, min_id=last_seen, reverse=True, limit=limit):
+            if getattr(message, "action", None):
+                continue
+            if not getattr(message, "poll", None):
+                continue
+            count += 1
+            if (src_id, message.id) in seen:
+                continue
+            try:
+                item = await retry_flood(
+                    lambda: process_poll(client, entity, message, admin_keys, base_link,
+                                         prev_numbers, allow_vote, max_q))
+            except Exception as e:
+                log_error(f"خطا در پردازش کوییز {message.id}: {e}")
+                item = minimal_item(message)
+            state["items"].append(item)
+            seen.add((src_id, message.id))
+            processed += 1
+            last_seen = max(last_seen, message.id)
+            state.setdefault("last_seen", {})[src_id] = last_seen
+            if processed % SAVE_EVERY == 0:
+                save_state(state)
+                print(f"  ... {processed} پست جدید، state ذخیره شد")
+            if pause:
+                await asyncio.sleep(pause)
+            if processed >= limit:
+                break
+    else:
+        hashtags = source.get("hashtags") or []
+        require_tag = bool(source.get("require_hashtag", True))
+        # آلبوم‌ها: پیام‌های grouped_id کنار هم می‌آیند؛ iter_messages ترتیب
+        # جدید→قدیم می‌دهد، پس برای گروه‌بندی اول دسته را کامل جمع می‌کنیم.
+        pending_album = []
+        pending_gid = None
+
+        async def flush_album(album):
+            nonlocal processed, last_seen
+            if not album:
+                return
+            album = sorted(album, key=lambda m: m.id)
+            first_id = album[0].id
+            if (src_id, first_id) in seen:
+                return
+            combined = "\n".join((m.raw_text or "") for m in album)
+            tags = find_tags(combined, hashtags)
+            if require_tag and not tags:
+                return
+            try:
+                item = await retry_flood(
+                    lambda: process_visual(client, entity, album, admin_keys, base_link,
+                                           hashtags, max_v))
+            except Exception as e:
+                log_error(f"خطا در پردازش پست تصویری {first_id}: {e}")
+                return
+            if item is None:
+                return
+            state["items"].append(item)
+            seen.add((src_id, first_id))
+            processed += 1
+            last_seen = max(last_seen, max(m.id for m in album))
+            state.setdefault("last_seen", {})[src_id] = last_seen
+            if processed % SAVE_EVERY == 0:
+                save_state(state)
+                print(f"  ... {processed} پست جدید، state ذخیره شد")
+
+        async for message in client.iter_messages(entity, min_id=last_seen, reverse=True, limit=limit):
+            if getattr(message, "action", None):
+                continue
+            if getattr(message, "poll", None):
+                continue
+            gid = getattr(message, "grouped_id", None)
+            if gid is not None:
+                if pending_gid is None:
+                    pending_gid, pending_album = gid, [message]
+                elif gid == pending_gid:
+                    pending_album.append(message)
+                else:
+                    await flush_album(pending_album)
+                    pending_gid, pending_album = gid, [message]
+            else:
+                await flush_album(pending_album)
+                pending_gid, pending_album = None, []
+                await flush_album([message])
+            count += 1
+            if pause:
+                await asyncio.sleep(pause)
+            if processed >= limit:
+                break
+        await flush_album(pending_album)
+
+    save_state(state)
+    print(f"منبع {src_id}: {count} پست خوانده شد، {processed} آیتم جدید")
+    return processed
+
+
+async def recheck_missing(client, sources_by_id, state, cap):
+    """
+    آیتم‌هایی که توضیح ندارند را دوباره از تلگرام می‌خواند (قدیمی‌ترین‌ها اول).
+    آیتمی که بعد از این تلاش هم توضیح ندارد، pending می‌ماند و نهایی نمی‌شود.
+    """
+    cfg = load_config()
+    allow_vote = bool(cfg.get("allow_vote", True))
+    prev_numbers = set(cfg.get("preceding_stem_numbers") or PREVIOUS_MESSAGE_QUESTIONS)
+    max_q = int(cfg.get("max_admin_messages", MAX_ADMIN_MESSAGES_QUIZ))
+    max_v = int(cfg.get("max_admin_messages_visual", MAX_ADMIN_MESSAGES_VISUAL))
+
+    missing = [it for it in state.get("items", []) if not _has_explanation(it)]
+    missing.sort(key=lambda it: (it.get("last_recheck_at") or "",
+                                 it.get("date", ""), it.get("channel_msg_id", 0)))
+    missing = missing[:cap]
+    print(f"دوباره‌چک {len(missing)} آیتم بدون توضیح (سقف {cap})")
+
+    admin_cache = {}
+    refilled = 0
+    for it in missing:
+        src = sources_by_id.get(it.get("source"))
+        if not src:
+            continue
+        entity = src.get("_entity")
+        if entity is None:
+            continue
+        if it.get("source") not in admin_cache:
+            admin_cache[it["source"]] = await collect_admin_keys(
+                client, entity, [])
+        admin_keys = admin_cache[it["source"]]
+        base_link = f"https://t.me/{getattr(entity, 'username', '') or ''}".rstrip("/")
+        try:
+            if it.get("kind") == "quiz":
+                msg = await client.get_messages(entity, ids=it["channel_msg_id"])
+                if not msg or not getattr(msg, "poll", None):
+                    continue
+                new = await retry_flood(
+                    lambda: process_poll(client, entity, msg, admin_keys, base_link,
+                                         prev_numbers, allow_vote, max_q))
+            else:
+                ids = it.get("message_ids") or [it["channel_msg_id"]]
+                msgs = await client.get_messages(entity, ids=ids)
+                unit = [m for m in (msgs if isinstance(msgs, list) else [msgs]) if m]
+                if not unit:
+                    continue
+                new = await retry_flood(
+                    lambda: process_visual(client, entity, unit, admin_keys, base_link,
+                                           src.get("hashtags") or [], max_v))
+                if new is None:
+                    continue
+        except Exception as e:
+            log_error(f"خطا در دوباره‌چک {it.get('channel_msg_id')}: {e}")
+            continue
+        it["last_recheck_at"] = datetime.now(TEHRAN).isoformat()
+        if _has_explanation(new):
+            for k in ("answer_index", "answer_source", "explanation_items",
+                      "explanation_from_admin", "admin_diag", "comment_source",
+                      "comments_scanned", "debug", "image_path"):
+                if k in new:
+                    it[k] = new[k]
+            if new.get("contexts"):
+                it["contexts"] = new["contexts"]
+                it["stem"] = new.get("stem")
+            refilled += 1
+            print(f"  ✓ توضیح پیدا شد: {it.get('channel_msg_id')}")
+        save_state(state)
+    print(f"دوباره‌چک تمام شد؛ {refilled} آیتم توضیح گرفتند")
+    return refilled
+
+
+def make_client():
     api_id = int(os.environ["TG_API_ID"])
     api_hash = os.environ["TG_API_HASH"]
-    session_str = os.environ.get("TG_SESSION_STRING", "")
-    if session_str:
-        client = TelegramClient(StringSession(session_str), api_id, api_hash)
-    else:
-        client = TelegramClient("neuronurse_weekly_session", api_id, api_hash)
+    session_string = os.environ.get("TG_SESSION_STRING") or ""
+    if session_string:
+        from telethon.sessions import StringSession
+        return TelegramClient(StringSession(session_string), api_id, api_hash)
+    # بدون StringSession: لاگین تعاملی با شماره تلفن (مسیر اسکریپت‌های خودت).
+    # در GitHub Actions همیشه StringSession از Secretها می‌آید.
+    return TelegramClient("neuronurse_session", api_id, api_hash)
+
+
+async def main_async(args):
+    cfg = load_config()
+    state = load_state()
+    client = make_client()
     await client.start()
-    print("وصل شدم به تلگرام.")
-    total = 0
-    for source in cfg.get("sources", []):
-        try:
-            total += await collect_source(client, cfg, source, state, items_by_key, limit=limit)
-        except Exception as e:
-            print(f"خطا در منبع {source.get('id')}: {e} — ادامه با منبع بعد.")
-        _sync_state(state, items_by_key)
+
+    sources = cfg.get("sources", [])
+    sources_by_id = {}
+    for src in sources:
+        ref = _channel_ref(src.get("channel"))
+        if not ref or str(ref).upper().startswith("@CHANGEME"):
+            print(f"منبع {src.get('id')} هنوز کانال ندارد؛ رد شد.")
+            continue
+        entity = await client.get_entity(ref)
+        src["_entity"] = entity
+        sources_by_id[src["id"]] = src
+
+    if args.recheck_missing is not None:
+        cap = args.recheck_missing if args.recheck_missing > 0 else int(
+            cfg.get("recheck_missing_batch", 200))
+        await recheck_missing(client, sources_by_id, state, cap)
+    else:
+        for src in sources:
+            if src["id"] not in sources_by_id:
+                continue
+            entity = src["_entity"]
+            admin_keys, found_real, names = await collect_admin_keys(client, entity, [])
+            print(f"منبع {src['id']}: ادمین‌ها: {len(names)} نفر"
+                  + ("" if found_real else " (ادمین واقعی پیدا نشد — اولین کامنت‌گذار استفاده می‌شود)"))
+            if names:
+                for n in names:
+                    print(f"  - {n}")
+            await collect_source(client, entity, src, admin_keys, state, args.limit)
+        # نهایی‌کردن: فقط در اجرای عادی؛ در recheck آیتم بدون توضیح نهایی نمی‌شود
+        finalize_items(state,
+                       int(cfg.get("recheck_hours", 48)),
+                       int(cfg.get("recheck_missing_days", 7)))
+        save_state(state)
+
+    if UNRECOGNIZED:
+        print("فرستنده‌هایی که کامنت اولشان ادمین/معتبر حساب نشد:")
+        for k, (name, cnt) in sorted(UNRECOGNIZED.items(), key=lambda x: -x[1][1]):
+            print(f"  {k}: {name} ({cnt} بار)")
+
     await client.disconnect()
-    # نهایی‌کردن پست‌های قدیمی‌تر از recheck_hours
-    now = datetime.now(TEHRAN)
-    for it in items_by_key.values():
-        try:
-            dt = datetime.fromisoformat(it["date"]).replace(tzinfo=TEHRAN)
-            if (now - dt).total_seconds() > cfg.get("recheck_hours", 48) * 3600:
-                it["status"] = "final"
-        except Exception:
-            pass
-    state["items"] = sorted(items_by_key.values(), key=lambda x: (x.get("date", ""), x.get("channel_msg_id", 0)))
-    save_state(state)
-    print(f"تمام شد: {total} پست تازه پردازش شد، مجموع {len(state['items'])} مورد در state.")
+
+    if args.build:
+        hashtags = []
+        for src in sources:
+            hashtags.extend(src.get("hashtags") or [])
+        cmd = [sys.executable, "build_docx.py", "--state", STATE_PATH, "--out", "out"]
+        if hashtags:
+            cmd += ["--hashtags", ",".join(dict.fromkeys(hashtags))]
+        print("ساخت ورد و JSON:", " ".join(cmd))
+        import subprocess
+        subprocess.run(cmd, check=True)
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--collect", action="store_true")
     ap.add_argument("--build", action="store_true")
-    ap.add_argument("--limit", type=int, default=0,
-                    help="حداکثر پست تازه در هر اجرا (۰ یعنی بدون سقف). "
-                         "برای بایگانی اولیه کانال، هر اجرا تکه‌ای جلو می‌رود "
-                         "و state ذخیره و کامیت می‌شود تا اجرا تایم‌اوت نخورد.")
+    ap.add_argument("--limit", type=int, default=1000)
+    ap.add_argument("--recheck-missing", nargs="?", const=0, type=int, default=None,
+                    help="آیتم‌های بدون توضیح را دوباره چک کن؛ عدد اختیاری = سقف (پیش‌فرض از config)")
     args = ap.parse_args()
-    if args.collect:
-        asyncio.run(main_async(limit=args.limit))
-    if args.build:
-        import subprocess
-        subprocess.run([sys.executable, "build_docx.py"], check=True)
-    if not args.collect and not args.build:
+    if args.recheck_missing is None and not args.collect and not args.build:
         ap.print_help()
+        return
+    if args.build and not args.collect and args.recheck_missing is None:
+        import subprocess
+        subprocess.run([sys.executable, "build_docx.py", "--state", STATE_PATH,
+                        "--out", "out"], check=True)
+        return
+    asyncio.run(main_async(args))
 
 
 if __name__ == "__main__":

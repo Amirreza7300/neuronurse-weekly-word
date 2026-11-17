@@ -29,6 +29,7 @@ from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
+from docx.opc.constants import RELATIONSHIP_TYPE
 
 TEHRAN = ZoneInfo("Asia/Tehran")
 FONT = "Vazirmatn"
@@ -117,9 +118,50 @@ def add_text(doc, text, size=FONT_SIZE, bold=False):
     return p
 
 
+def add_hyperlink(paragraph, doc, text, url, size=FONT_SIZE, bold=False):
+    """لینک واقعی در ورد (سگمنت‌های TextUrl تلگرام)؛ آبی + زیرخط‌دار، وزیرمتن."""
+    part = doc.part
+    r_id = part.relate_to(url, RELATIONSHIP_TYPE.HYPERLINK, is_external=True)
+    hl = OxmlElement("w:hyperlink")
+    hl.set(qn("r:id"), r_id)
+    run = OxmlElement("w:r")
+    rPr = OxmlElement("w:rPr")
+    rf = OxmlElement("w:rFonts")
+    for attr in ("w:ascii", "w:hAnsi", "w:eastAsia", "w:cs"):
+        rf.set(qn(attr), FONT)
+    rPr.append(rf)
+    if bold:
+        rPr.append(OxmlElement("w:b")); rPr.append(OxmlElement("w:bCs"))
+    u = OxmlElement("w:u"); u.set(qn("w:val"), "single"); rPr.append(u)
+    color = OxmlElement("w:color"); color.set(qn("w:val"), "0563C1"); rPr.append(color)
+    sz = OxmlElement("w:sz"); sz.set(qn("w:val"), str(int(size * 2))); rPr.append(sz)
+    szcs = OxmlElement("w:szCs"); szcs.set(qn("w:val"), str(int(size * 2))); rPr.append(szcs)
+    rPr.append(OxmlElement("w:rtl"))
+    run.append(rPr)
+    t = OxmlElement("w:t")
+    t.set(qn("xml:space"), "preserve")
+    t.text = text
+    run.append(t)
+    hl.append(run)
+    paragraph._p.append(hl)
+
+
+def add_image_once(doc, path, rendered, width=4.0):
+    """تصویر را فقط یک بار در هر سوال رندر می‌کند (عکس صورت سوال هم در
+    contexts می‌آید هم در image_path — تکرار نشود)."""
+    if not path or not os.path.exists(path) or path in rendered:
+        return
+    rendered.add(path)
+    add_image(doc, path, width)
+
+
 def add_segments(doc, segments, size=FONT_SIZE, force_bold=False):
     p = para(doc, size)
     for seg in segments or [{"t": "", "b": False}]:
+        if seg.get("u"):
+            add_hyperlink(p, doc, seg.get("t", ""), seg["u"], size,
+                          bold=bool(seg.get("b")) or force_bold)
+            continue
         r = p.add_run(seg.get("t", ""))
         fmt(r, size, bold=bool(seg.get("b")) or force_bold,
             italic=bool(seg.get("i")), underline=bool(seg.get("u")),
@@ -182,25 +224,35 @@ def build_quiz_doc(items, title, subtitle):
         # قالب خواسته‌شده، به همین ترتیب: تاریخ و زمان، سوال بولد،
         # گزینه‌ها، گزینه درست، توضیح (پاسخ تشریحی).
         add_text(doc, f"تاریخ: {jalali_str(it.get('date', ''))} | ساعت: {fa_digits(it.get('time_tehran', ''))}")
+        rendered = set()
+        # صورت سوال: همه گروه‌های زمینه‌ای (ریپلای و پیام بالای سوال)؛
+        # برای state قدیمی که فقط stem دارد، همان stem رندر می‌شود.
+        contexts = it.get("contexts") or []
         stem = it.get("stem") or {}
-        if stem.get("text") or stem.get("photo_path"):
-            label = "صورت سوال (پیام ریپلای‌شده):" if stem.get("source") == "replied_message" else "صورت سوال (پیام بالای سوال):"
+        if not contexts and (stem.get("text") or stem.get("photo_path")):
+            contexts = [{"first_id": stem.get("message_id"), "kind": "reply" if stem.get("source") == "replied_message" else "previous",
+                         "items": ([{"type": "text", "segments": stem["segments"]}] if stem.get("segments") else
+                                   ([{"type": "text", "segments": [{"t": stem["text"], "b": False}]}] if stem.get("text") else [])) +
+                                  ([{"type": "image", "path": stem["photo_path"]}] if stem.get("photo_path") else [])}]
+        for g in contexts:
+            label = "صورت سوال (پیام ریپلای‌شده):" if g.get("kind") == "reply" else "صورت سوال (پیام بالای سوال):"
             add_text(doc, label, bold=True)
-            if stem.get("segments"):
-                add_segments(doc, stem["segments"])
-            elif stem.get("text"):
-                add_text(doc, stem["text"])
-            if stem.get("photo_path"):
-                add_image(doc, stem["photo_path"])
+            for c in g.get("items") or []:
+                if c.get("type") == "text":
+                    add_segments(doc, c.get("segments") or [{"t": c.get("text", ""), "b": False}])
+                elif c.get("type") == "image":
+                    add_image_once(doc, c.get("path"), rendered)
+                elif c.get("type") == "note":
+                    add_text(doc, c.get("text", ""))
         add_segments(doc, it.get("question_segments") or [{"t": it.get("question", ""), "b": False}],
                      force_bold=True)
         if it.get("image_path"):
-            add_image(doc, it["image_path"])
+            add_image_once(doc, it["image_path"], rendered)
 
         for oi, opt in enumerate(it.get("options", [])):
             label = OPTION_LABELS[oi] if oi < len(OPTION_LABELS) else str(oi + 1)
             # گزینه صحیح در لیست گزینه‌ها بولد نمی‌شود (خواسته امیررضا)؛
-            # فقط خط «پاسخ صحیح:» پایین سوال بولد است. بولدهای خود
+            # فقط خط «گزینه درست» پایین سوال بولد است. بولدهای خود
             # تلگرام داخل متن گزینه سر جایشان می‌مانند.
             p = para(doc)
             r = p.add_run(f"{label}) ")
@@ -211,6 +263,10 @@ def build_quiz_doc(items, title, subtitle):
             if not segs:
                 segs = [{"t": opt, "b": False}]
             for seg in segs:
+                if seg.get("u"):
+                    add_hyperlink(p, doc, seg.get("t", ""), seg["u"], FONT_SIZE,
+                                  bold=bool(seg.get("b")))
+                    continue
                 r = p.add_run(seg.get("t", ""))
                 fmt(r, FONT_SIZE, bold=bool(seg.get("b")),
                     italic=bool(seg.get("i")))
@@ -275,8 +331,12 @@ def build_visual_doc(items, title, subtitle, hashtag_order):
                 add_segments(doc, it["caption_segments"])
             elif it.get("caption"):
                 add_text(doc, it["caption"])
-            if it.get("image_path"):
-                add_image(doc, it["image_path"])
+            rendered = set()
+            images = it.get("images") or ([it["image_path"]] if it.get("image_path") else [])
+            for path in images:
+                add_image_once(doc, path, rendered)
+            for note in it.get("notes") or []:
+                add_text(doc, note)
             expl = it.get("explanation_items") or []
             if expl:
                 add_text(doc, "توضیح:", bold=True)
@@ -285,6 +345,8 @@ def build_visual_doc(items, title, subtitle, hashtag_order):
                         add_segments(doc, c.get("segments") or [{"t": c.get("text", ""), "b": False}])
                     elif c.get("type") == "image":
                         add_text(doc, "[توضیح فقط عکس بود]")
+                if not it.get("explanation_from_admin", True):
+                    add_text(doc, "(توضیح بالا از ادمین نیست — از اولین کامنت‌گذار گرفته شده)")
             else:
                 add_text(doc, "توضیحی از ادمین پیدا نشد.")
             add_text(doc, "")
@@ -376,7 +438,17 @@ def main():
               "quiz_no_explanation": [i.get("channel_msg_id") for i in quizzes if not i.get("explanation_items")],
               "visual_no_explanation": [i.get("channel_msg_id") for i in visuals if not i.get("explanation_items")],
               "quiz_no_number": [i.get("channel_msg_id") for i in quizzes if not i.get("printed_number")],
+              # منبع توضیح‌ها (برای اینکه معلوم باشد چند توضیح از ادمین است
+              # و چندتا از اولین کامنت‌گذار): شمارش، نه فقط لیست جاافتاده‌ها.
+              "quiz_explanation_admin": len([i for i in quizzes if i.get("explanation_items") and i.get("explanation_from_admin", True)]),
+              "quiz_explanation_first_person": len([i for i in quizzes if i.get("explanation_items") and not i.get("explanation_from_admin", True)]),
+              "visual_explanation_admin": len([i for i in visuals if i.get("explanation_items") and i.get("explanation_from_admin", True)]),
+              "visual_explanation_first_person": len([i for i in visuals if i.get("explanation_items") and not i.get("explanation_from_admin", True)]),
+              "admin_diag": {},
               "weeks": {}}
+    for i in items:
+        d = i.get("admin_diag") or "unknown"
+        report["admin_diag"][d] = report["admin_diag"].get(d, 0) + 1
 
     if quizzes:
         doc = build_quiz_doc(quizzes, "بانک تست نورونرس — فایل کلی", "همه تست‌ها به‌ترتیب تاریخ انتشار")
@@ -413,9 +485,26 @@ def main():
                 parts.append("فقط عکس بود")
         return "\n".join(parts)
 
+    def context_text(it):
+        """متن همه گروه‌های زمینه‌ای (ریپلای + پیام بالای سوال) برای JSON."""
+        parts = []
+        for grp in it.get("contexts") or []:
+            for c in grp.get("items") or []:
+                if c.get("type") == "text":
+                    t = seg_text(c.get("segments")) or c.get("text", "")
+                    if t.strip():
+                        parts.append(t)
+                elif c.get("type") == "note":
+                    parts.append(c.get("text", ""))
+        if not parts:
+            stem = (it.get("stem") or {}).get("text", "") or ""
+            if stem.strip():
+                parts.append(stem)
+        return "\n".join(parts)
+
     def clean_quiz(it):
-        stem = (it.get("stem") or {}).get("text", "") or ""
-        q = (stem.strip() + "\n" if stem.strip() else "") + (it.get("question", "") or "")
+        ctx = context_text(it)
+        q = (ctx.strip() + "\n" if ctx.strip() else "") + (it.get("question", "") or "")
         return {
             "num": it.get("printed_number"),
             "question": q,
