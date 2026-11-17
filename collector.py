@@ -1274,11 +1274,20 @@ async def main_async(args):
     sources = cfg.get("sources", [])
     sources_by_id = {}
     for src in sources:
-        ref = _channel_ref(src.get("channel"))
-        if not ref or str(ref).upper().startswith("@CHANGEME"):
+        raw = src.get("channel")
+        if not raw or "CHANGEME" in str(raw).upper():
             print(f"منبع {src.get('id')} هنوز کانال ندارد؛ رد شد.")
             continue
-        entity = await client.get_entity(ref)
+        ref = _channel_ref(raw)
+        if not ref or "CHANGEME" in str(ref).upper():
+            print(f"منبع {src.get('id')} هنوز کانال ندارد؛ رد شد.")
+            continue
+        try:
+            entity = await client.get_entity(ref)
+        except Exception as e:
+            print(f"منبع {src.get('id')}: خطا در پیدا کردن کانال {ref}: {e} — رد شد.")
+            log_error(f"خطا در get_entity برای منبع {src.get('id')} ({ref}): {e}")
+            continue
         src["_entity"] = entity
         sources_by_id[src["id"]] = src
 
