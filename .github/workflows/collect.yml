@@ -5,9 +5,9 @@ on:
     # طول می‌کشد؛ در بایگانی اولیه هر اجرا تا ۱۰۰۰ پست می‌گیرد و
     # طولانی‌تر است، ولی ریپوی عمومی Actions نامحدود و رایگان دارد.
     - cron: "17 */3 * * *"
-    # بستن هفته و ارسال ورد هفته: پنجشنبه شب ساعت ۲۳:۳۰ تهران
-    # = پنجشنبه ۲۰:۰۰ UTC (هفته از جمعه ۰۰:۰۰ شروع می‌شود)
-    - cron: "0 20 * * 4"
+    # بستن هفته و ارسال ورد هفته: پنجشنبه شب ساعت ۱۲ (۰۰:۰۰ جمعه) تهران
+    # = پنجشنبه ۲۰:۳۰ UTC (هفته از جمعه ۰۰:۰۰ شروع می‌شود)
+    - cron: "30 20 * * 4"
   workflow_dispatch:
     inputs:
       recheck_missing:
@@ -59,7 +59,7 @@ jobs:
           git diff --cached --quiet || git commit -m "weekly update $(date -u +%F_%H%M)"
           git push || true
       - name: Send latest weekly Word + JSON to owner (Thursday-night run only)
-        if: github.event.schedule == '0 20 * * 4'
+        if: github.event.schedule == '30 20 * * 4'
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           OWNER_CHAT_ID: ${{ secrets.OWNER_CHAT_ID }}
