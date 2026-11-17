@@ -1,5 +1,5 @@
 {
-  "total_quiz": 1790,
+  "total_quiz": 1823,
   "total_visual": 0,
   "quiz_no_answer": [
     327,
@@ -738,14 +738,15 @@
     4273,
     4287,
     4345,
-    4403
+    4403,
+    4435
   ],
-  "quiz_explanation_admin": 966,
+  "quiz_explanation_admin": 999,
   "quiz_explanation_first_person": 221,
   "visual_explanation_admin": 0,
   "visual_explanation_first_person": 0,
   "admin_diag": {
-    "admin": 966,
+    "admin": 999,
     "no_comments": 3,
     "first_person": 221,
     "no_admin_found": 600
@@ -1298,7 +1299,27 @@
     },
     "2026-10-16": {
       "label": "۱۴۰۵/۰۷/۲۴ تا ۱۴۰۵/۰۸/۰۱",
-      "quiz": 8,
+      "quiz": 10,
+      "visual": 0
+    },
+    "2026-10-23": {
+      "label": "۱۴۰۵/۰۸/۰۱ تا ۱۴۰۵/۰۸/۰۸",
+      "quiz": 10,
+      "visual": 0
+    },
+    "2026-10-30": {
+      "label": "۱۴۰۵/۰۸/۰۸ تا ۱۴۰۵/۰۸/۱۵",
+      "quiz": 10,
+      "visual": 0
+    },
+    "2026-11-06": {
+      "label": "۱۴۰۵/۰۸/۱۵ تا ۱۴۰۵/۰۸/۲۲",
+      "quiz": 6,
+      "visual": 0
+    },
+    "2026-11-13": {
+      "label": "۱۴۰۵/۰۸/۲۲ تا ۱۴۰۵/۰۸/۲۹",
+      "quiz": 5,
       "visual": 0
     }
   }
