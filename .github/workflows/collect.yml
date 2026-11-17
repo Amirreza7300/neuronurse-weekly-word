@@ -1,9 +1,9 @@
 name: collect-weekly-word
 on:
   schedule:
-    # هر ۳ ساعت یک بار (UTC) — حدود ۲۴۰ اجرا در ماه، هر اجرا ۱ تا ۲ دقیقه
-    # یعنی حدود ۴۰۰ تا ۵۰۰ دقیقه در ماه؛ زیر سقف رایگان ۲۰۰۰ دقیقه
-    # ریپوی خصوصی است. ریپوی عمومی: Actions نامحدود و رایگان است.
+    # هر ۳ ساعت یک بار (UTC). وقتی کانال به‌روز است هر اجرا ۱ تا ۲ دقیقه
+    # طول می‌کشد؛ در بایگانی اولیه هر اجرا تا ۱۰۰۰ پست می‌گیرد و
+    # طولانی‌تر است، ولی ریپوی عمومی Actions نامحدود و رایگان دارد.
     - cron: "17 */3 * * *"
     # بستن هفته و ارسال ورد هفته: پنجشنبه شب ساعت ۲۳:۳۰ تهران
     # = پنجشنبه ۲۰:۰۰ UTC (هفته از جمعه ۰۰:۰۰ شروع می‌شود)
@@ -13,10 +13,20 @@ on:
 permissions:
   contents: write
 
+# دو اجرا هم‌زمان روی یک state کار نکنند؛ اجرای در حال انجام
+# لغو نمی‌شود تا بایگانی اولیه نصفه نماند.
+concurrency:
+  group: collect-weekly-word
+  cancel-in-progress: false
+
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # سقف ۲۰ دقیقه برای بایگانی اولیه کل کانال کم بود (اجرای تستی
+    # ۲۶ آبان در ۲۰ دقیقه کنسل شد و هیچ stateای ذخیره نشد). با
+    # --limit هر اجرا حداکثر ۱۰۰۰ پست می‌گیرد و تمام می‌شود؛
+    # سقف ۱۲۰ دقیقه فقط حاشیه امن برای FloodWait و کندی تلگرام است.
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -28,8 +38,9 @@ jobs:
           TG_API_ID: ${{ secrets.TG_API_ID }}
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
           TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
-        run: python collector.py --collect --build
+        run: python collector.py --collect --build --limit 1000
       - name: Commit state + Word files
+        if: always()
         run: |
           git config user.name "neuronurse-bot"
           git config user.email "bot@local"
