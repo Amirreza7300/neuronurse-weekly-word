@@ -205003,7 +205003,7 @@
       "comment_source": "admin",
       "comments_scanned": 5,
       "debug": "",
-      "status": "pending",
+      "status": "final",
       "image_path": null
     },
     {
@@ -206292,5 +206292,5 @@
   "last_seen": {
     "quiz": 4500
   },
-  "updated_at": "2026-11-17T22:07:56.167016+03:30"
+  "updated_at": "2026-11-18T06:26:05.167308+03:30"
 }
