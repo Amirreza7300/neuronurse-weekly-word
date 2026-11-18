@@ -58093,12 +58093,30 @@
       ],
       "answer_index": 3,
       "answer_source": "poll",
-      "stem": null,
+      "stem": {
+        "source": "previous",
+        "message_id": 1400,
+        "text": "",
+        "segments": [],
+        "photo_path": "out/images/ctx1400.jpg"
+      },
       "explanation_items": [],
       "explanation_from_admin": true,
       "admin_diag": "no_admin_found",
       "status": "final",
-      "image_path": null
+      "image_path": "out/images/ctx1400.jpg",
+      "contexts": [
+        {
+          "first_id": 1400,
+          "kind": "previous",
+          "items": [
+            {
+              "type": "image",
+              "path": "out/images/ctx1400.jpg"
+            }
+          ]
+        }
+      ]
     },
     {
       "source": "quiz",
@@ -58590,12 +58608,30 @@
       ],
       "answer_index": 4,
       "answer_source": "poll",
-      "stem": null,
+      "stem": {
+        "source": "previous",
+        "message_id": 1415,
+        "text": "",
+        "segments": [],
+        "photo_path": "out/images/ctx1415.jpg"
+      },
       "explanation_items": [],
       "explanation_from_admin": true,
       "admin_diag": "no_admin_found",
       "status": "final",
-      "image_path": null
+      "image_path": "out/images/ctx1415.jpg",
+      "contexts": [
+        {
+          "first_id": 1415,
+          "kind": "previous",
+          "items": [
+            {
+              "type": "image",
+              "path": "out/images/ctx1415.jpg"
+            }
+          ]
+        }
+      ]
     },
     {
       "source": "quiz",
@@ -62501,12 +62537,30 @@
       ],
       "answer_index": 3,
       "answer_source": "poll",
-      "stem": null,
+      "stem": {
+        "source": "previous",
+        "message_id": 1555,
+        "text": "",
+        "segments": [],
+        "photo_path": "out/images/ctx1555.jpg"
+      },
       "explanation_items": [],
       "explanation_from_admin": true,
       "admin_diag": "no_admin_found",
       "status": "final",
-      "image_path": null
+      "image_path": "out/images/ctx1555.jpg",
+      "contexts": [
+        {
+          "first_id": 1555,
+          "kind": "previous",
+          "items": [
+            {
+              "type": "image",
+              "path": "out/images/ctx1555.jpg"
+            }
+          ]
+        }
+      ]
     },
     {
       "source": "quiz",
@@ -68394,12 +68448,48 @@
       ],
       "answer_index": 2,
       "answer_source": "poll",
-      "stem": null,
+      "stem": {
+        "source": "previous",
+        "message_id": 1751,
+        "text": "809. توضیحات کِیس: مددجوی خانم 60 ساله با سابقه‌ی مصرف طولانی داروهای NSAID، با شکایت درد سوزشی معده (خصوصاََ در زمانی که معده خالی است) به کلینیک مراجعه می‌کند. درد موقتاََ با خوردن غذا تسکین می‌یابد اما چند ساعت بعد مجدداََ شروع می‌شود. مددجو تهوع و استفراغ گاه و بیگاه هم گزارش می‌کند.",
+        "segments": [
+          {
+            "t": "809. توضیحات کِیس: مددجوی خانم 60 ساله با سابقه‌ی مصرف طولانی داروهای NSAID، با شکایت درد سوزشی معده (خصوصاََ در زمانی که معده خالی است) به کلینیک مراجعه می‌کند. درد موقتاََ با خوردن غذا تسکین می‌یابد اما چند ساعت بعد مجدداََ شروع می‌شود. مددجو تهوع و استفراغ گاه و بیگاه هم گزارش می‌کند.",
+            "b": false,
+            "i": false,
+            "u": false,
+            "s": false,
+            "url": null
+          }
+        ],
+        "photo_path": null
+      },
       "explanation_items": [],
       "explanation_from_admin": true,
       "admin_diag": "no_admin_found",
       "status": "final",
-      "image_path": null
+      "image_path": null,
+      "contexts": [
+        {
+          "first_id": 1751,
+          "kind": "previous",
+          "items": [
+            {
+              "type": "text",
+              "segments": [
+                {
+                  "t": "809. توضیحات کِیس: مددجوی خانم 60 ساله با سابقه‌ی مصرف طولانی داروهای NSAID، با شکایت درد سوزشی معده (خصوصاََ در زمانی که معده خالی است) به کلینیک مراجعه می‌کند. درد موقتاََ با خوردن غذا تسکین می‌یابد اما چند ساعت بعد مجدداََ شروع می‌شود. مددجو تهوع و استفراغ گاه و بیگاه هم گزارش می‌کند.",
+                  "b": false,
+                  "i": false,
+                  "u": false,
+                  "s": false,
+                  "url": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "source": "quiz",
@@ -72654,12 +72744,48 @@
       ],
       "answer_index": 3,
       "answer_source": "poll",
-      "stem": null,
+      "stem": {
+        "source": "previous",
+        "message_id": 1898,
+        "text": "869. توضیحات کیس: مددجویی 65 ساله، با سابقه نارسایی قلبی و فشار خون بالا مراجعه می‌کند. بیمار از تپش قلب و استفراغ شکایت دارد. در بررسی اولیه، نبض نامنظم و ضربان قلب 52 بار در دقیقه گزارش می‌شود. بیمار سابقه مصرف بتابلاکر (متوپرولول) و دیگوکسین دارد. سطح پتاسیم سرمی بیمار 3.0 می باشد.",
+        "segments": [
+          {
+            "t": "869. توضیحات کیس: مددجویی 65 ساله، با سابقه نارسایی قلبی و فشار خون بالا مراجعه می‌کند. بیمار از تپش قلب و استفراغ شکایت دارد. در بررسی اولیه، نبض نامنظم و ضربان قلب 52 بار در دقیقه گزارش می‌شود. بیمار سابقه مصرف بتابلاکر (متوپرولول) و دیگوکسین دارد. سطح پتاسیم سرمی بیمار 3.0 می باشد.",
+            "b": false,
+            "i": false,
+            "u": false,
+            "s": false,
+            "url": null
+          }
+        ],
+        "photo_path": null
+      },
       "explanation_items": [],
       "explanation_from_admin": true,
       "admin_diag": "no_admin_found",
       "status": "final",
-      "image_path": null
+      "image_path": null,
+      "contexts": [
+        {
+          "first_id": 1898,
+          "kind": "previous",
+          "items": [
+            {
+              "type": "text",
+              "segments": [
+                {
+                  "t": "869. توضیحات کیس: مددجویی 65 ساله، با سابقه نارسایی قلبی و فشار خون بالا مراجعه می‌کند. بیمار از تپش قلب و استفراغ شکایت دارد. در بررسی اولیه، نبض نامنظم و ضربان قلب 52 بار در دقیقه گزارش می‌شود. بیمار سابقه مصرف بتابلاکر (متوپرولول) و دیگوکسین دارد. سطح پتاسیم سرمی بیمار 3.0 می باشد.",
+                  "b": false,
+                  "i": false,
+                  "u": false,
+                  "s": false,
+                  "url": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "source": "quiz",
@@ -206578,5 +206704,5 @@
   "last_seen": {
     "quiz": 4502
   },
-  "updated_at": "2026-11-18T19:16:47.363111+03:30"
+  "updated_at": "2026-11-18T19:22:52.769754+03:30"
 }
