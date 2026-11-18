@@ -15,6 +15,11 @@ on:
         required: false
         default: ""
         type: string
+      backfill_previous:
+        description: "یک‌بارمصرف: پیام بالای ۸ شماره‌ی preceding_stem_numbers که زمینه‌ی previous ندارند"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -45,7 +50,9 @@ jobs:
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
           TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
         run: |
-          if [ -n "${{ inputs.recheck_missing }}" ]; then
+          if [ "${{ inputs.backfill_previous }}" = "true" ]; then
+            python collector.py --backfill-previous --build
+          elif [ -n "${{ inputs.recheck_missing }}" ]; then
             python collector.py --recheck-missing ${{ inputs.recheck_missing }} --build
           else
             python collector.py --collect --build --limit 1000
