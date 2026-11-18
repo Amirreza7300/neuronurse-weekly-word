@@ -37,6 +37,7 @@
   - شماره چاپ‌شده لاتین ابتدای سوال، شماره سوال در ورد است.
 اجرا:  python collector.py --collect --build --limit 1000
        python collector.py --recheck-missing [N] --build
+       python collector.py --backfill-previous [--build]   # یک‌بارمصرف: پیام بالای ۸ شماره‌ی preceding_stem_numbers
 در GitHub Actions با Secretها اجرا می‌شود؛ هیچ رمزی در کد نیست.
 """
 import argparse
@@ -181,16 +182,23 @@ def find_answer_index(text):
     return None
 
 
+_INVISIBLE = dict.fromkeys(
+    map(ord, "\u200b\u200c\u200d\u200e\u200f\u202a\u202b\u202c\u202d\u202e"
+             "\u2066\u2067\u2068\u2069\ufeff\ufe0f"), None)
+
+
 def parse_channel_number(question_text):
     """
-    شماره‌ی سوال را از ابتدای متن خودِ کوییز می‌خواند (مثلاً '1773. #روان ...').
-    خط اول بررسی می‌شود؛ فقط اگر خط اول فقط هشتگ بود (مثل '#CCU') خط دوم هم دیده
-    می‌شود. به این ترتیب فهرست‌های شماره‌دار داخل متن سوال اشتباه گرفته نمی‌شوند.
+    شماره‌ی سوال را از ابتدای متن خودِ کوییز می‌خواند. نمونه‌هایی که پشتیبانی می‌شوند:
+    '1773. #روان ...'   '⭐️ 567. #داخلی ...'   '⭐️ #582. #داخلی ...'   '142‌. #ویژه ...' (نیم‌فاصله قبل از نقطه)
+    خط اول بررسی می‌شود؛ فقط اگر خط اول فقط هشتگ بود (مثل '#CCU') خط دوم هم دیده می‌شود.
+    به این ترتیب فهرست‌های شماره‌دار داخل متن سوال اشتباه گرفته نمی‌شوند.
     """
-    t = normalize_digits(question_text or "")
+    t = normalize_digits(question_text or "").translate(_INVISIBLE)
     lines = [ln for ln in t.split("\n") if ln.strip()]
-    pattern = r"\s*(?:#\S+\s+)*(?:سوال|تست|شماره)?\s*[#(\[]?(\d{1,5})\s*[\.\-–—:)\]]"
+    pattern = r"(?:#\S+\s+)*(?:سوال|تست|شماره)?\s*[#(\[]?(\d{1,5})\s*[\.\-–—:)\]]"
     for ln in lines[:2]:
+        ln = re.sub(r"^[^\w#]+", "", ln)     # حذف ایموجی و نشانه‌های ابتدای خط
         m = re.match(pattern, ln)
         if m:
             return int(m.group(1))
@@ -199,22 +207,53 @@ def parse_channel_number(question_text):
     return None
 
 
+def _clean_for_number(text):
+    """
+    متن را برای تشخیص شماره/پیشوند تمیز می‌کند و نگاشت ایندکس برمی‌گرداند:
+    (cleaned, index_map) که index_map[i] ایندکس کاراکتر iامِ متن تمیز در متن
+    اصلی است و index_map[len(cleaned)] == len(text). تمیز کردن فقط حذف است
+    (کاراکتر نامرئی در کل متن + ایموجی/نشانه‌های ابتدای هر خط) و ترتیب
+    کاراکترها عوض نمی‌شود؛ پس با نگاشت می‌شود انتهای پیشوندِ پیدا‌شده در متن
+    تمیز را به متن اصلی برگرداند. normalize_digits طول را عوض نمی‌کند.
+    """
+    t = normalize_digits(text or "")
+    kept_idx = [i for i, ch in enumerate(t) if ord(ch) not in _INVISIBLE]
+    s1 = "".join(t[i] for i in kept_idx)
+    lines = s1.split("\n")
+    out_chars, out_idx = [], []
+    pos = 0
+    for li, ln in enumerate(lines):
+        m = re.match(r"^[^\w#]+", ln)
+        skip = m.end() if m else 0
+        for j in range(skip, len(ln)):
+            out_chars.append(ln[j])
+            out_idx.append(kept_idx[pos + j])
+        if li < len(lines) - 1:
+            out_chars.append("\n")
+            out_idx.append(kept_idx[pos + len(ln)])
+        pos += len(ln) + 1
+    out_idx.append(len(t))
+    return "".join(out_chars), out_idx
+
+
 def parse_printed_number(text):
     """(شماره چاپ‌شده، متن سوال بدون پیشوند شماره) — برای ورد، شماره در
-    تیتر «سوال N» می‌آید و اول متن سوال تکرار نمی‌شود."""
+    تیتر «سوال N» می‌آید و اول متن سوال تکرار نمی‌شود. پیشوند با همان
+    پاک‌سازی parse_channel_number (نامرئی + ایموجی ابتدای خط) پیدا می‌شود
+    تا شماره‌ی سخت (مثل '⭐️ 567.') هم حذف شود، نه فقط پیدا؛ prefix_len
+    مثل قبل از اختلاف طول رشته‌ی اصلی و رشته‌ی بدون پیشوند حساب می‌شود."""
     if not text:
         return None, text
     num = parse_channel_number(text)
     if num is None:
         return None, text
-    # پیشوند شماره معمولاً ابتدای متن است (با هشتگ‌های اختیاری قبلش)؛
-    # همان‌جا حذف می‌شود و entities سوال با همان مقدار جابه‌جا می‌شوند.
+    cleaned, index_map = _clean_for_number(text)
     m = re.match(
-        r"\s*(?:#\S+\s+)*(?:سوال|تست|شماره)?\s*[#(\[]?\d{1,5}\s*[\.\-–—:)\]]",
-        normalize_digits(text),
+        r"(?:#\S+\s+)*(?:سوال|تست|شماره)?\s*[#(\[]?\d{1,5}\s*[\.\-–—:)\]]",
+        cleaned,
     )
     if m:
-        stripped = text[m.end():].lstrip()
+        stripped = text[index_map[m.end()]:].lstrip()
         return num, stripped
     return num, text
 
@@ -1187,6 +1226,11 @@ async def recheck_missing(client, sources_by_id, state, cap, only_pending=False)
     """
     آیتم‌هایی که توضیح ندارند را دوباره از تلگرام می‌خواند (قدیمی‌ترین‌ها اول).
     آیتمی که بعد از این تلاش هم توضیح ندارد، pending می‌ماند و نهایی نمی‌شود.
+    علاوه بر آن، آیتم‌های pending که توضیحشان از اولین کامنت‌گذار آمده
+    (comment_source == "first_person") هم دوباره چک می‌شوند تا اگر ادمین
+    دیرتر توضیح داده باشد، توضیح ادمین جای آن را بگیرد؛ جایگزینی فقط وقتی
+    انجام می‌شود که منبع جدید admin باشد (قانون better اسکریپت‌های خودت).
+    آیتم final هیچ‌وقت برنمی‌گردد.
     only_pending=True یعنی فقط آیتم‌های pending (تازه و بی‌توضیح) — برای اجرای عادی.
     """
     cfg = load_config()
@@ -1195,16 +1239,28 @@ async def recheck_missing(client, sources_by_id, state, cap, only_pending=False)
     max_q = int(cfg.get("max_admin_messages", MAX_ADMIN_MESSAGES_QUIZ))
     max_v = int(cfg.get("max_admin_messages_visual", MAX_ADMIN_MESSAGES_VISUAL))
 
-    missing = [it for it in state.get("items", []) if not _has_explanation(it)]
+    no_expl = [it for it in state.get("items", []) if not _has_explanation(it)]
+    # ارتقای first_person → admin: فقط pending؛ توضیح دارد ولی از ادمین نیست.
+    upgrade = [it for it in state.get("items", [])
+               if it.get("status") == "pending"
+               and it.get("comment_source") == "first_person"
+               and _has_explanation(it)]
+    missing = list(no_expl)
     if only_pending:
         missing = [it for it in missing if it.get("status") == "pending"]
+    upgrade_ids = {id(it) for it in upgrade}
+    missing = missing + upgrade
     missing.sort(key=lambda it: (it.get("last_recheck_at") or "",
                                  it.get("date", ""), it.get("channel_msg_id", 0)))
     missing = missing[:cap]
-    print(f"دوباره‌چک {len(missing)} آیتم بدون توضیح (سقف {cap})")
+    n_upgrade = sum(1 for it in missing if id(it) in upgrade_ids)
+    print(f"دوباره‌چک {len(missing)} آیتم ({len(missing) - n_upgrade} بدون توضیح"
+          + (f" + {n_upgrade} ارتقای first_person→admin" if n_upgrade else "")
+          + f"، سقف {cap})")
 
     admin_cache = {}
     refilled = 0
+    upgraded = 0
     for it in missing:
         src = sources_by_id.get(it.get("source"))
         if not src:
@@ -1239,21 +1295,89 @@ async def recheck_missing(client, sources_by_id, state, cap, only_pending=False)
         except Exception as e:
             log_error(f"خطا در دوباره‌چک {it.get('channel_msg_id')}: {e}")
             continue
+        was_upgrade = id(it) in upgrade_ids
+        old_source = it.get("comment_source")
         it["last_recheck_at"] = datetime.now(TEHRAN).isoformat()
         if _has_explanation(new):
-            for k in ("answer_index", "answer_source", "explanation_items",
-                      "explanation_from_admin", "admin_diag", "comment_source",
-                      "comments_scanned", "debug", "image_path"):
-                if k in new:
-                    it[k] = new[k]
-            if new.get("contexts"):
-                it["contexts"] = new["contexts"]
-                it["stem"] = new.get("stem")
-            refilled += 1
-            print(f"  ✓ توضیح پیدا شد: {it.get('channel_msg_id')}")
+            # قانون better: آیتم بدون توضیح هر توضیحی را می‌پذیرد؛ آیتم
+            # first_person فقط وقتی توضیح ادمین بیاید جایگزین می‌شود.
+            better = (not was_upgrade) or (
+                new.get("comment_source") == "admin" and old_source != "admin")
+            if better:
+                for k in ("answer_index", "answer_source", "explanation_items",
+                          "explanation_from_admin", "admin_diag", "comment_source",
+                          "comments_scanned", "debug", "image_path"):
+                    if k in new:
+                        it[k] = new[k]
+                if new.get("contexts"):
+                    it["contexts"] = new["contexts"]
+                    it["stem"] = new.get("stem")
+                if was_upgrade:
+                    upgraded += 1
+                    print(f"  ✓ توضیح ادمین جای توضیح اولین کامنت‌گذار نشست: "
+                          f"{it.get('channel_msg_id')}")
+                else:
+                    refilled += 1
+                    print(f"  ✓ توضیح پیدا شد: {it.get('channel_msg_id')}")
+            else:
+                print(f"  - توضیح جدید بهتر نبود (منبع: {new.get('comment_source')}): "
+                      f"{it.get('channel_msg_id')}")
         save_state(state)
-    print(f"دوباره‌چک تمام شد؛ {refilled} آیتم توضیح گرفتند")
+    print(f"دوباره‌چک تمام شد؛ {refilled} آیتم توضیح گرفتند"
+          + (f" و {upgraded} آیتم به توضیح ادمین ارتقا یافتند" if upgraded else ""))
     return refilled
+
+
+async def backfill_previous_context(client, sources_by_id, state, prev_numbers):
+    """
+    یک‌بارمصرف (معادل patch_previous_context اسکریپت خودت): برای سوال‌های
+    کوییز که شماره‌شان در preceding_stem_numbers است ولی گروه زمینه‌ای
+    previous ندارند، پیام بالای سوال را اضافه می‌کند. صرف‌نظر از status
+    (حتی final)؛ status، پنجره‌ی نهایی‌شدن و بقیه‌ی فیلدها عوض نمی‌شود.
+    اگر چیزی برای اضافه کردن نباشد، هیچ کاری نمی‌کند.
+    """
+    targets = [it for it in state.get("items", [])
+               if it.get("kind") == "quiz"
+               and it.get("printed_number") in prev_numbers
+               and not any(g.get("kind") == "previous"
+                           for g in it.get("contexts") or [])]
+    print(f"backfill پیام بالا: {len(targets)} سوال بدون زمینه‌ی previous")
+    if not targets:
+        return 0
+    patched = 0
+    for it in targets:
+        src = sources_by_id.get(it.get("source"))
+        if not src:
+            continue
+        entity = src.get("_entity")
+        if entity is None:
+            continue
+        base_link = f"https://t.me/{getattr(entity, 'username', '') or ''}".rstrip("/")
+        try:
+            unit = await retry_flood(
+                lambda: fetch_previous_unit(client, entity, it["channel_msg_id"]))
+            if not unit:
+                print(f"  - پیام بالای سوال {it.get('printed_number')} پیدا نشد")
+                continue
+            seen_first = {g.get("first_id") for g in it.get("contexts") or []}
+            if unit[0].id in seen_first:
+                print(f"  - پیام بالای سوال {it.get('printed_number')} "
+                      f"همان زمینه‌ی قبلی است؛ رد شد")
+                continue
+            items = await retry_flood(
+                lambda: unit_content(client, unit, "ctx", base_link))
+            it.setdefault("contexts", []).append(
+                {"first_id": unit[0].id, "kind": "previous", "items": items})
+            it["stem"] = _stem_from_context(it["contexts"])
+            it["image_path"] = _first_image_path(it["contexts"])
+            patched += 1
+            print(f"  ✓ پیام بالای سوال {it.get('printed_number')} اضافه شد")
+            save_state(state)
+        except Exception as e:
+            log_error(f"خطا در backfill پیام بالای سوال {it.get('printed_number')}: {e}")
+            continue
+    print(f"backfill پیام بالا تمام شد؛ {patched} سوال زمینه گرفتند")
+    return patched
 
 
 def make_client():
@@ -1294,7 +1418,11 @@ async def main_async(args):
         src["_entity"] = entity
         sources_by_id[src["id"]] = src
 
-    if args.recheck_missing is not None:
+    if args.backfill_previous:
+        prev_numbers = set(cfg.get("preceding_stem_numbers") or PREVIOUS_MESSAGE_QUESTIONS)
+        await backfill_previous_context(client, sources_by_id, state, prev_numbers)
+        save_state(state)
+    elif args.recheck_missing is not None:
         cap = args.recheck_missing if args.recheck_missing > 0 else int(
             cfg.get("recheck_missing_batch", 200))
         await recheck_missing(client, sources_by_id, state, cap)
@@ -1347,11 +1475,13 @@ def main():
     ap.add_argument("--limit", type=int, default=1000)
     ap.add_argument("--recheck-missing", nargs="?", const=0, type=int, default=None,
                     help="آیتم‌های بدون توضیح را دوباره چک کن؛ عدد اختیاری = سقف (پیش‌فرض از config)")
+    ap.add_argument("--backfill-previous", action="store_true",
+                    help="یک‌بارمصرف: پیام بالای سوال‌های preceding_stem_numbers را که زمینه‌ی previous ندارند اضافه کن (بدون تغییر status/پنجره‌ها)")
     args = ap.parse_args()
-    if args.recheck_missing is None and not args.collect and not args.build:
+    if args.recheck_missing is None and not args.collect and not args.build and not args.backfill_previous:
         ap.print_help()
         return
-    if args.build and not args.collect and args.recheck_missing is None:
+    if args.build and not args.collect and args.recheck_missing is None and not args.backfill_previous:
         import subprocess
         subprocess.run([sys.executable, "build_docx.py", "--state", STATE_PATH,
                         "--out", "out"], check=True)
