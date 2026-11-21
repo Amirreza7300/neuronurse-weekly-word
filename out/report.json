@@ -1,5 +1,5 @@
 {
-  "total_quiz": 1827,
+  "total_quiz": 1828,
   "total_visual": 0,
   "quiz_no_answer": [
     327,
@@ -741,12 +741,12 @@
     4403,
     4435
   ],
-  "quiz_explanation_admin": 1003,
+  "quiz_explanation_admin": 1004,
   "quiz_explanation_first_person": 221,
   "visual_explanation_admin": 0,
   "visual_explanation_first_person": 0,
   "admin_diag": {
-    "admin": 1003,
+    "admin": 1004,
     "no_comments": 3,
     "first_person": 221,
     "no_admin_found": 600
@@ -1324,7 +1324,7 @@
     },
     "2026-11-20": {
       "label": "۱۴۰۵/۰۸/۲۹ تا ۱۴۰۵/۰۹/۰۶",
-      "quiz": 1,
+      "quiz": 2,
       "visual": 0
     }
   }
