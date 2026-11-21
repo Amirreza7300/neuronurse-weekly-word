@@ -206697,7 +206697,7 @@
       "comment_source": "admin",
       "comments_scanned": 1,
       "debug": "",
-      "status": "pending",
+      "status": "final",
       "image_path": null
     },
     {
@@ -206887,12 +206887,12 @@
       "comment_source": "admin",
       "comments_scanned": 1,
       "debug": "",
-      "status": "pending",
+      "status": "final",
       "image_path": null
     }
   ],
   "last_seen": {
     "quiz": 4504
   },
-  "updated_at": "2026-11-20T23:56:51.729933+03:30"
+  "updated_at": "2026-11-21T05:52:05.909777+03:30"
 }
