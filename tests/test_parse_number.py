@@ -40,6 +40,8 @@ def _stub_telethon():
     sessions.StringSession = _Dummy
     errors.FloodWaitError = type("FloodWaitError", (Exception,), {})
     errors.RPCError = type("RPCError", (Exception,), {})
+    errors.UserAlreadyParticipantError = type(
+        "UserAlreadyParticipantError", (Exception,), {})
     for name in ("MessageMediaPoll", "MessageMediaPhoto", "MessageMediaDocument",
                  "MessageEntityBold", "MessageEntityItalic", "MessageEntityUnderline",
                  "MessageEntityStrike", "MessageEntityTextUrl",
@@ -48,6 +50,8 @@ def _stub_telethon():
     channels.GetFullChannelRequest = _Dummy
     channels.GetParticipantsRequest = _Dummy
     messages.SendVoteRequest = _Dummy
+    messages.ImportChatInviteRequest = _Dummy
+    messages.CheckChatInviteRequest = _Dummy
 
     sys.modules["telethon"] = telethon
     sys.modules["telethon.sessions"] = sessions
