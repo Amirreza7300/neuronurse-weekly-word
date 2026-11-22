@@ -29,6 +29,9 @@
     ادمین است؛ حساب‌های سرویس تلگرام (ALWAYS_ADMIN_USER_IDS) همیشه
     ادمین‌اند. اگر هیچ ادمینی پیدا نشد، همان قانون روی اولین
     کامنت‌گذار اعمال می‌شود و در ورد مشخص می‌شود که از ادمین نیست.
+  - کانال تصویری گروه Discussion ندارد: توضیح پست تصویری، زنجیره‌ی
+    ریپلای‌های داخل خود کانال روی همان پست است (سقف ۹ پیام)؛ خود
+    کانال هم خصوصی است و collector با لینک دعوت config واردش می‌شود.
   - صورت سوال: اگر کوییز ریپلای به پیامی باشد، آن پیام (متن/عکس)
     جزو صورت سوال است. پیام بالای سوال فقط برای شماره‌های داخل
     config (preceding_stem_numbers).
@@ -60,7 +63,7 @@ FILES_DIR = "data/files"
 try:
     from telethon import TelegramClient
     from telethon.sessions import StringSession
-    from telethon.errors import FloodWaitError, RPCError
+    from telethon.errors import FloodWaitError, RPCError, UserAlreadyParticipantError
     from telethon.tl.types import (
         MessageMediaPoll, MessageMediaPhoto, MessageMediaDocument,
         MessageEntityBold, MessageEntityItalic, MessageEntityUnderline,
@@ -68,7 +71,8 @@ try:
         ChannelParticipantsAdmins, PeerUser, PeerChannel, PeerChat,
     )
     from telethon.tl.functions.channels import GetFullChannelRequest, GetParticipantsRequest
-    from telethon.tl.functions.messages import SendVoteRequest
+    from telethon.tl.functions.messages import (
+        SendVoteRequest, ImportChatInviteRequest, CheckChatInviteRequest)
 except ImportError:
     print("Telethon نصب نیست: pip install -r requirements.txt")
     sys.exit(1)
@@ -566,6 +570,61 @@ async def fetch_unit_comments(client, entity, unit, scan_limit):
     return []
 
 
+# ---------- توضیح تصویری از ریپلای‌های داخل خود کانال ----------
+
+def select_reply_chain(messages, unit_ids, max_run):
+    """
+    زنجیره‌ی توضیح یک پست تصویری را از پیام‌های خود کانال انتخاب می‌کند.
+    messages پیام‌های بعد از پست‌اند (قدیمی به جدید) و unit_ids آیدی‌های
+    خود پست (آلبوم چند آیدی دارد):
+      - پیامی جزو زنجیره است که reply_to_msg_id اش از قبل در مجموعه‌ی
+        زنجیره باشد؛ مجموعه با آیدی‌های پست شروع می‌شود و هر پیام
+        پذیرفته‌شده آیدی خودش را به آن اضافه می‌کند (ریپلای به ریپلای هم
+        جزو زنجیره است).
+      - پیامی که به چیز دیگری ریپلای شده رد می‌شود (مال پست دیگری است)
+        و پیام بدون ریپلای هم رد می‌شود؛ ردشدن زنجیره را قطع نمی‌کند.
+      - پیامی که آیدی خودش جزو unit_ids است (ادامه‌ی آلبوم که در جریان
+        پیام‌های بعدی دیده می‌شود) توضیح حساب نمی‌شود.
+      - سقف max_run پیام پذیرفته‌شده.
+    """
+    unit_set = set(unit_ids)
+    chain_ids = set(unit_set)
+    run = []
+    for msg in messages:
+        if len(run) >= max_run:
+            break
+        if msg.id in unit_set:
+            continue
+        if reply_target_id(msg) in chain_ids:
+            run.append(msg)
+            chain_ids.add(msg.id)
+    return run
+
+
+async def fetch_visual_replies(client, entity, unit, max_admin_messages):
+    """
+    توضیح پست تصویری از ریپلای‌های داخل خود کانال خوانده می‌شود؛ کانال
+    تصویری گروه Discussion ندارد و کامنتی در کار نیست. پیام‌های بعد از
+    پست گرفته می‌شوند و زنجیره‌ی ریپلای روی خود پست با select_reply_chain
+    انتخاب می‌شود. (دنباله‌ی توضیح، تعداد پیام‌های اسکن‌شده) برمی‌گردد.
+    """
+    unit_ids = [m.id for m in unit]
+    scanned = []
+    try:
+        async for msg in client.iter_messages(
+            entity, min_id=min(unit_ids), reverse=True,
+            limit=SCAN_LIMIT_VISUAL * 3
+        ):
+            if getattr(msg, "action", None):
+                continue
+            scanned.append(msg)
+    except FloodWaitError:
+        raise
+    except Exception as e:
+        log_error(f"خطا در خواندن ریپلای‌های پست تصویری {unit_ids[0]}: {e}")
+    return select_reply_chain(scanned, unit_ids, max_admin_messages), len(scanned)
+
+
 # ---------- جواب صحیح و توضیح داخل کوییز (از خود تلگرام) ----------
 
 def correct_index_from_results(poll_obj, results):
@@ -931,7 +990,8 @@ async def process_poll(client, entity, message, admin_keys, base_link, previous_
 
 async def process_visual(client, entity, unit, admin_keys, base_link, hashtags,
                          max_admin_messages):
-    """یک پست/آلبوم تصویری: رسانه‌ها + متن + کامنت ادمین (حداکثر ۹ پیام)."""
+    """یک پست/آلبوم تصویری: رسانه‌ها + متن + توضیح از ریپلای‌های داخل
+    خود کانال روی همین پست (زنجیره‌ی ریپلای، حداکثر ۹ پیام)."""
     combined = "\n".join((m.raw_text or "") for m in unit)
     tags = find_tags(combined, hashtags)
     if not tags:
@@ -956,21 +1016,13 @@ async def process_visual(client, entity, unit, admin_keys, base_link, hashtags,
         elif it["type"] == "note":
             notes.append(it.get("text", ""))
 
-    comments = await fetch_unit_comments(client, entity, unit, SCAN_LIMIT_VISUAL)
-    run = select_admin_run(comments, admin_keys, max_admin_messages)
+    # توضیح از ریپلای‌های داخل خود کانال روی همین پست خوانده می‌شود
+    # (کانال تصویری گروه Discussion ندارد). admin_keys این‌جا دیگر نقشی
+    # ندارد: پیام‌های کانال همه از خود کانال/ادمین‌اند.
+    run, scanned = await fetch_visual_replies(client, entity, unit, max_admin_messages)
     comment_source = "admin" if run else "none"
-    admin_diag = "admin" if run else ("no_comments" if not comments else "no_admin_found")
+    admin_diag = "admin" if run else "no_replies"
     debug = ""
-    if comments and not run:
-        k = sender_key(comments[0])
-        rec = UNRECOGNIZED.setdefault(k, [sender_name(comments[0]), 0])
-        rec[1] += 1
-        if FALLBACK_FIRST_COMMENTER:
-            run = select_admin_run(comments, None, max_admin_messages)
-            if run:
-                comment_source = "first_person"
-                admin_diag = "first_person"
-        debug = describe_comment(comments[0], len(comments))
 
     expl = explanation_items_from_run(run)
 
@@ -987,7 +1039,7 @@ async def process_visual(client, entity, unit, admin_keys, base_link, hashtags,
         "explanation_items": expl,
         "explanation_from_admin": comment_source != "first_person",
         "admin_diag": admin_diag, "comment_source": comment_source,
-        "comments_scanned": len(comments), "debug": debug,
+        "comments_scanned": scanned, "debug": debug,
         "status": "pending",
     }
 
@@ -1052,6 +1104,46 @@ def find_tags(text, hashtag_list):
 
 
 # ---------- جمع‌کردن و دوباره‌چک‌کردن (سیم‌کشی بایگانی) ----------
+
+def _invite_hash(raw):
+    """اگر مقدار کانال لینک دعوت خصوصی باشد (t.me/+... یا t.me/joinchat/...)،
+    هش دعوت را از روی مقدار خام برمی‌گرداند؛ وگرنه None.
+    باید قبل از _channel_ref صدا زده شود، چون _channel_ref لینک دعوت را
+    نمی‌فهمد و get_entity روی آن خطا می‌دهد."""
+    if raw is None:
+        return None
+    c = str(raw)
+    for marker in ("t.me/+", "joinchat/"):
+        idx = c.find(marker)
+        if idx >= 0:
+            h = c[idx + len(marker):].strip().strip("/")
+            return h or None
+    return None
+
+
+async def join_invite_channel(client, invite_hash):
+    """
+    با لینک دعوت خصوصی وارد کانال می‌شود و entity کانال را برمی‌گرداند.
+    نام‌ها از سورس نصب‌شده‌ی Telethon (نسخه‌ی requirements.txt) راستی‌آزمایی
+    شده‌اند: ImportChatInviteRequest یک Updates برمی‌گرداند که .chats دارد؛
+    اگر از قبل عضو باشیم UserAlreadyParticipantError می‌دهد و آن‌وقت
+    CheckChatInviteRequest یک ChatInviteAlready برمی‌گرداند که .chat دارد.
+    """
+    try:
+        updates = await client(ImportChatInviteRequest(invite_hash))
+        chats = getattr(updates, "chats", None) or []
+        if chats:
+            print("از راه لینک دعوت وارد کانال شدیم.")
+            return chats[0]
+        log_error("ورود با لینک دعوت: کانالی در جواب تلگرام نبود")
+        return None
+    except UserAlreadyParticipantError:
+        info = await client(CheckChatInviteRequest(invite_hash))
+        chat = getattr(info, "chat", None)
+        if chat is not None:
+            print("از قبل عضو کانال بودیم؛ از همان عضویت استفاده می‌شود.")
+        return chat
+
 
 def _channel_ref(channel):
     """لینک/یوزرنیم کانال را به مرجعی که Telethon می‌فهمد تبدیل می‌کند"""
@@ -1196,6 +1288,10 @@ async def collect_source(client, entity, source, admin_keys, state, limit):
             if getattr(message, "action", None):
                 continue
             if getattr(message, "poll", None):
+                continue
+            if reply_target_id(message) is not None:
+                # ریپلای روی پیام دیگری در خود کانال = متن توضیح همان پست؛
+                # پست جدا نیست و موقع پردازش پست پدرش خوانده می‌شود.
                 continue
             gid = getattr(message, "grouped_id", None)
             if gid is not None:
@@ -1404,6 +1500,23 @@ async def main_async(args):
         raw = src.get("channel")
         if not raw or "CHANGEME" in str(raw).upper():
             print(f"منبع {src.get('id')} هنوز کانال ندارد؛ رد شد.")
+            continue
+        invite = _invite_hash(raw)
+        if invite:
+            # کانال خصوصی با لینک دعوت: اول با همان لینک وارد می‌شویم و
+            # entity را از جواب می‌گیریم. خطا فقط همین منبع را رد می‌کند.
+            try:
+                entity = await join_invite_channel(client, invite)
+            except Exception as e:
+                print(f"منبع {src.get('id')}: خطا در ورود با لینک دعوت: {e} — رد شد.")
+                log_error(f"خطا در ورود با لینک دعوت برای منبع {src.get('id')}: {e}")
+                continue
+            if entity is None:
+                print(f"منبع {src.get('id')}: ورود با لینک دعوت ناموفق بود؛ رد شد.")
+                log_error(f"ورود با لینک دعوت برای منبع {src.get('id')} ناموفق بود")
+                continue
+            src["_entity"] = entity
+            sources_by_id[src["id"]] = src
             continue
         ref = _channel_ref(raw)
         if not ref or "CHANGEME" in str(ref).upper():
