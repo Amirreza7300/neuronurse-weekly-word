@@ -207109,7 +207109,7 @@
       "comment_source": "admin",
       "comments_scanned": 7,
       "debug": "",
-      "status": "pending",
+      "status": "final",
       "image_path": null
     },
     {
@@ -207355,7 +207355,7 @@
       "comment_source": "admin",
       "comments_scanned": 1,
       "debug": "",
-      "status": "pending",
+      "status": "final",
       "image_path": null
     },
     {
@@ -208902,11 +208902,212 @@
       "comments_scanned": 2,
       "debug": "",
       "status": "pending"
+    },
+    {
+      "source": "quiz",
+      "kind": "quiz",
+      "channel_msg_id": 4518,
+      "date": "2026-11-23",
+      "time_tehran": "16:52",
+      "week_key": "2026-11-20",
+      "printed_number": 1883,
+      "question": "#داخلی: کدام فرآورده خونی زیر بیشتر برای تامین فیبرینوژن استفاده میشود؟",
+      "question_segments": [
+        {
+          "t": "#داخلی: کدام فرآورده خونی زیر بیشتر برای تامین فیبرینوژن استفاده میشود؟",
+          "b": false,
+          "i": false,
+          "u": false,
+          "s": false,
+          "url": null
+        }
+      ],
+      "options": [
+        "FFP (Fresh Frozen Plasma)",
+        "Cryoprecipitate (کرایو)",
+        "PF24 (Plasma Frozen Within 24 Hours)",
+        "ABO ANTI-BODY"
+      ],
+      "options_segments": [
+        [
+          {
+            "t": "FFP (Fresh Frozen Plasma)",
+            "b": false,
+            "i": false,
+            "u": false,
+            "s": false,
+            "url": null
+          }
+        ],
+        [
+          {
+            "t": "Cryoprecipitate (کرایو)",
+            "b": false,
+            "i": false,
+            "u": false,
+            "s": false,
+            "url": null
+          }
+        ],
+        [
+          {
+            "t": "PF24 (Plasma Frozen Within 24 Hours)",
+            "b": false,
+            "i": false,
+            "u": false,
+            "s": false,
+            "url": null
+          }
+        ],
+        [
+          {
+            "t": "ABO ANTI-BODY",
+            "b": false,
+            "i": false,
+            "u": false,
+            "s": false,
+            "url": null
+          }
+        ]
+      ],
+      "answer_index": 2,
+      "answer_source": "poll",
+      "stem": null,
+      "contexts": [],
+      "explanation_items": [
+        {
+          "type": "text",
+          "segments": [
+            {
+              "t": "وقتی پلاسما رو از خون جدا میکنیم بر اساس نحوه فریز کردنش به سه فرآورده دست پیدا میکنیم \n\n۱. FFP (Fresh Frozen Plasma)\n\nپلاسمای تازه منجمد\n\nپلاسما در زمان استاندارد پس از جمع‌آوری منجمد میشه تا فاکتورهای انعقادی اون حفظ بشن.\n\n* کاربرد: تأمین چندین فاکتور انعقادی در بیمارانی که اختلال انعقادی دارند و اندیکاسیون تزریق پلاسما وجود داره.\n\n* حاوی طیف وسیعی از فاکتورهای انعقادی و پروتئین‌های پلاسماییه.\n\n ۲. PF24 (Plasma Frozen Within 24 Hours)\n\nپلاسمایی که طی ۲۴ ساعت پس از جمع‌آوری منجمد شده\n\nاین فرآورده برخلاف FFP، ممکنه با فاصله زمانی بیشتری از جمع‌آوری منجمد بشه (تا ۲۴ ساعت)، بنابراین ممکنه میزان برخی فاکتورهای انعقادی حساس به زمان، به‌خصوص Factor V و Factor VIII، کمتر باشه.\n\n* کاربرد: در بسیاری از موارد، کاربرد بالینی مشابه FFP داره.\n\n* تفاوت اصلی: زمان انجماد و میزان حفظ برخی فاکتورهای انعقادی.\n\n۳. Cryoprecipitate (کرایو)\n\nیک بخش غلیظ از پروتئین‌های خاص پلاسما\n\nکرایو از ذوب آهسته پلاسمای منجمد در شرایط کنترل‌شده به دست میاد؛ در نتیجه، بخش رسوب‌کرده‌ای که حاوی پروتئین‌های خاصه جدا میشه.\n\nترکیبات مهم کرایو:\n\n* Fibrinogen: مهم‌ترین جزء بالینی کرایو\n\n* Factor VIII\n\n* Factor XIII\n\n* von Willebrand factor (vWF)\n\n* Fibronectin\n\nکاربرد اصلی: تأمین فیبرینوژن، به‌خصوص در خونریزی‌هایی که سطح فیبرینوژن پایین است و جایگزینی آن ضرورت دارد.",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            }
+          ]
+        }
+      ],
+      "explanation_from_admin": true,
+      "admin_diag": "admin",
+      "comment_source": "admin",
+      "comments_scanned": 1,
+      "debug": "",
+      "status": "pending",
+      "image_path": null
+    },
+    {
+      "source": "quiz",
+      "kind": "quiz",
+      "channel_msg_id": 4520,
+      "date": "2026-11-23",
+      "time_tehran": "20:24",
+      "week_key": "2026-11-20",
+      "printed_number": 1884,
+      "question": "#دارو: برای تزریق داروی سفتریاکسون کدام محلول زیر نامناسب تر است؟",
+      "question_segments": [
+        {
+          "t": "#دارو: برای تزریق داروی سفتریاکسون کدام محلول زیر نامناسب تر است؟",
+          "b": false,
+          "i": false,
+          "u": false,
+          "s": false,
+          "url": null
+        }
+      ],
+      "options": [
+        "نرمال سالین ۰.۹ ٪",
+        "یک سوم دو سوم",
+        "رینگرلاکتات",
+        "دکستروز ۵ درصد"
+      ],
+      "options_segments": [
+        [
+          {
+            "t": "نرمال سالین ۰.۹ ٪",
+            "b": false,
+            "i": false,
+            "u": false,
+            "s": false,
+            "url": null
+          }
+        ],
+        [
+          {
+            "t": "یک سوم دو سوم",
+            "b": false,
+            "i": false,
+            "u": false,
+            "s": false,
+            "url": null
+          }
+        ],
+        [
+          {
+            "t": "رینگرلاکتات",
+            "b": false,
+            "i": false,
+            "u": false,
+            "s": false,
+            "url": null
+          }
+        ],
+        [
+          {
+            "t": "دکستروز ۵ درصد",
+            "b": false,
+            "i": false,
+            "u": false,
+            "s": false,
+            "url": null
+          }
+        ]
+      ],
+      "answer_index": 3,
+      "answer_source": "poll",
+      "stem": null,
+      "contexts": [],
+      "explanation_items": [
+        {
+          "type": "text",
+          "segments": [
+            {
+              "t": "سفتریاکسون یک آنتی‌بیوتیک از نسل سوم سفالوسپورین‌ها است که با مهار سنتز دیواره سلولی باکتری، موجب مرگ باکتری می‌شود (Bactericidal).\n موارد مصرف: درمان طیف وسیعی از عفونت‌های باکتریایی از جمله پنومونی، مننژیت، سپسیس، عفونت‌های ادراری و برخی عفونت‌های داخل شکمی.\n⚠️ نکات مهم پرستاری:\nحساسیت: قبل از تجویز، سابقه حساسیت به سفالوسپورین‌ها و واکنش‌های شدید به سایر بتالاکتام‌ها بررسی شود.\nتزریق عضلانی (IM): در صورت تجویز IM، لیدوکائین ممکن است برای کاهش درد تزریق به‌عنوان حلال استفاده شود؛ محلول حاوی لیدوکائین هرگز نباید به‌صورت IV تزریق شود.\nتزریق وریدی (IV): سفتریاکسون نباید با محلول‌های حاوی کلسیم مانند رینگر لاکتات مخلوط یا هم‌زمان از یک مسیر تزریق شود؛ به‌ویژه در نوزادان خطر رسوب سفتریاکسون-کلسیم وجود دارد.\nعوارض: اسهال، واکنش‌های حساسیتی، تغییرات هماتولوژیک و احتمال بروز کولیت مرتبط با C. difficile.\nعوارض صفراوی: ممکن است باعث تشکیل رسوبات صفراوی (Biliary sludge) یا شبه‌سنگ صفراوی شود که در برخی موارد با قطع دارو برطرف می‌شود.",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "segments": [
+            {
+              "t": "میخواستم به شکل نکته براتون بذارم\nدیدم به شکل تستم بد نیست \nهمون نکته رو تست کردم",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            }
+          ]
+        }
+      ],
+      "explanation_from_admin": true,
+      "admin_diag": "admin",
+      "comment_source": "admin",
+      "comments_scanned": 5,
+      "debug": "",
+      "status": "pending",
+      "image_path": null
     }
   ],
   "last_seen": {
-    "quiz": 4516,
+    "quiz": 4520,
     "visual": 17
   },
-  "updated_at": "2026-11-23T16:26:02.015237+03:30"
+  "updated_at": "2026-11-24T05:45:00.869442+03:30"
 }
