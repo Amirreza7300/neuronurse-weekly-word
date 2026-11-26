@@ -208994,7 +208994,7 @@
       "comment_source": "admin",
       "comments_scanned": 1,
       "debug": "",
-      "status": "pending",
+      "status": "final",
       "image_path": null
     },
     {
@@ -209101,7 +209101,7 @@
       "comment_source": "admin",
       "comments_scanned": 5,
       "debug": "",
-      "status": "pending",
+      "status": "final",
       "image_path": null
     },
     {
@@ -210979,5 +210979,5 @@
     "quiz": 4530,
     "visual": 20
   },
-  "updated_at": "2026-11-25T22:51:23.468386+03:30"
+  "updated_at": "2026-11-26T07:06:52.279383+03:30"
 }
