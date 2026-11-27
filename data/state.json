@@ -209942,7 +209942,7 @@
       "comment_source": "admin",
       "comments_scanned": 5,
       "debug": "",
-      "status": "pending",
+      "status": "final",
       "image_path": null
     },
     {
@@ -210238,7 +210238,7 @@
       "comment_source": "admin",
       "comments_scanned": 3,
       "debug": "",
-      "status": "pending",
+      "status": "final",
       "image_path": null
     },
     {
@@ -210972,7 +210972,7 @@
       "comment_source": "admin",
       "comments_scanned": 3,
       "debug": "",
-      "status": "pending"
+      "status": "final"
     },
     {
       "source": "quiz",
@@ -212736,5 +212736,5 @@
     "quiz": 4533,
     "visual": 24
   },
-  "updated_at": "2026-11-27T16:01:34.205488+03:30"
+  "updated_at": "2026-11-28T02:59:25.754924+03:30"
 }
