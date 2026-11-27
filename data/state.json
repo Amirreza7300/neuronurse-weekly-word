@@ -211067,11 +211067,1674 @@
       "debug": "",
       "status": "pending",
       "image_path": null
+    },
+    {
+      "source": "visual",
+      "kind": "visual",
+      "channel_msg_id": 24,
+      "date": "2026-11-27",
+      "time_tehran": "07:10",
+      "week_key": "2026-11-27",
+      "message_ids": [
+        24
+      ],
+      "hashtags": [
+        "#پمفلت_آموزشی"
+      ],
+      "caption": "#پمفلت_آموزشی، #داخلی، #گوارش، #PUD",
+      "caption_segments": [
+        {
+          "t": "#پمفلت_آموزشی، #داخلی، #گوارش، #PUD",
+          "b": false,
+          "i": false,
+          "u": false,
+          "s": false,
+          "url": null
+        }
+      ],
+      "image_path": "out/images/p24.jpg",
+      "images": [
+        "out/images/p24.jpg"
+      ],
+      "notes": [],
+      "explanation_items": [
+        {
+          "type": "text",
+          "segments": [
+            {
+              "t": "✴️ پمفلت آموزشی بیماری اولسر پپتیک (داخلی، گوارش)\n\n1️⃣ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "کادر What is PUD? (بیماریِ زخم پپتیک چیه؟)",
+              "b": true,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\nزخم پپتیک به زخمی گفته میشه که در اثر آسیب به لایه مخاطی دستگاه گوارش ایجاد میشه و معمولاً در دو محل دیده میشه:\n\n• اول: Stomach: معده؛ در این حالت بهش Gastric ulcer می‌گیم.\n• دوم: Duodenum: دوازدهه یا ابتدای روده باریک؛ در این حالت Duodenal ulcer نامیده میشه.\n\n🔺️ نکته مهم اینه که زخم پپتیک صرفاً یک التهاب سطحی نیست. در تعریف کلاسیک پاتولوژیک، زخم واقعی از لایه muscularis mucosae عبور می‌کنه و به لایه‌های عمقی‌تر نفوذ می‌کنه.\n\n🔺️ چرا ایجاد میشه؟\nمعده به‌طور طبیعی اسید هیدروکلریک (HCl) و آنزیم پپسین ترشح می‌کنه. این مواد برای هضم غذا ضروری هستن، اما در صورت آسیب دیدن سد دفاعی مخاط، می‌تونن به بافت معده یا دوازدهه صدمه بزنن و زخم ایجاد کنن.\n\n2️⃣ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "کادر The battle: Offense and Defence (جنگ بین عوامل مهاجم و عوامل محافظ)",
+              "b": true,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\nاین قسمت یکی از مهم‌ترین بخش‌های پاتوفیزیولوژی PUD هست.\nبرای درک بهتر، معده رو مثل یک قلعه در نظر بگیرید.\nیه طرف، عوامل مهاجم قرار دارن که به دیواره معده آسیب می‌زنن؛ طرف دیگه، عوامل محافظ هستن که از مخاط دفاع میکنن:\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "الف) Aggressive Factors؛ عوامل مهاجم:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\n1. باکتری H. pylori: باکتری هلیکوباکتر پیلوری با ایجاد التهاب و اختلال در سد دفاعی مخاط، زمینه ایجاد زخم رو فراهم می‌کنه.\n2. داروهای NSAIDs: داروهایی مثل Ibuprofen، Naproxen و Aspirin که با کاهش پروستاگلاندین‌ها، قدرت دفاعی مخاط رو کم می‌کنن.\n3. اسید معده یا Gastric Acid: اسید معده که محیط بسیار اسیدی ایجاد می‌کنه و در صورت آسیب سد مخاطی می‌تونه به بافت صدمه بزنه.\n4. آنزیم Pepsin: آنزیم گوارشی که پروتئین‌ها رو تجزیه می‌کنه و در حضور آسیب مخاطی می‌تونه به گسترش زخم کمک کنه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "ب) Protective Factors؛ عوامل محافظ:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\n1. لایه مخاطی یا Mucus: لایه مخاطی که مثل یک پوشش محافظ روی دیواره معده قرار می‌گیره.\n2. بیکربنات (Bicarbonate): ماده‌ای قلیایی که اسید رو در نزدیکی سطح سلول‌های مخاطی خنثی می‌کنه.\n3. پروستاگلاندین‌ها (Prostaglandins): موادی که به تولید مخاط و بیکربنات، حفظ جریان خون مخاطی و ترمیم مخاط کمک می‌کنن.\n4. جریان خون بالا (Good Blood Flow): جریان خون مناسب باعث تأمین اکسیژن و مواد غذایی و همچنین ترمیم بافت آسیب‌دیده میشه.\n5. ترمیم سریع (Rapid Healing): سلول‌های مخاطی توانایی ترمیم و جایگزینی دارن.\n\n🔺️ هر عاملی که دفاع مخاطی رو کاهش بده یا آسیب ناشی از عوامل مهاجم رو افزایش بده، می‌تونه باعث ایجاد PUD بشه.\n\n3️⃣ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "کادر Causes (علل ایجاد)",
+              "b": true,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\nدو علت اصلی زخم پپتیک عبارت‌اند از:\n\n1. ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "باکتری هلیکوباکتر پیلوری",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nیک باکتری مارپیچی‌شکله که می‌تونه در محیط اسیدی معده زندگی کنه. اما سؤال مهم اینه که این باکتری چطور در محیط اسیدی معده زنده میمونه؟\nبه کمک آنزیمی به نام Urease.\nاین آنزیم اوره رو به آمونیاک و دی‌اکسیدکربن تبدیل می‌کنه.\nآمونیاک اطراف باکتری رو تا حدی قلیایی می‌کنه و به بقای اون در محیط اسیدی کمک می‌کنه.\nباکتری H. pylori باعث التهاب مزمن و اختلال در مکانیسم‌های دفاعی مخاط میشه و معده رو مستعد زخم میکنه.\n\n2. ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "داروهای NSAIDs",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nداروهای ضدالتهاب غیراستروئیدی مثل:\n• Ibuprofen\n• Naproxen\n• Aspirin\n• Diclofenac\nاین داروها آنزیم‌های Cyclooxygenase یا COX رو مهار می‌کنن.\nدر نتیجه تولید Prostaglandins کاهش پیدا می‌کنه.\nوقتی پروستاگلاندین کم بشه:\n• ترشح مخاط کاهش پیدا می‌کنه.\n• ترشح بیکربنات کاهش پیدا می‌کنه.\n• جریان خون مخاطی ممکنه کاهش پیدا کنه.\n• توانایی ترمیم مخاط کمتر میشه.\nدر نتیجه مخاط در برابر اسید و پپسین آسیب‌پذیرتر میشه.\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "نکته مهم",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ": مصرف NSAID همراه غذا ممکنه ناراحتی معده رو کاهش بده، اما از ایجاد زخم یا خونریزی به‌طور مطمئن جلوگیری نمی‌کنه.\n\n4️⃣ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "کادر Types and key differences (تفاوت زخم معده و دوازدهه)",
+              "b": true,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "الف) Gastric Ulcer: زخم معده",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\n• محل ایجاد زخم در خود معده است.\n• الگوی کلاسیک درد:\n- درد معمولاً هنگام غذا خوردن یا مدت کوتاهی بعد از غذا تشدید میشه.\n- ممکنه بیمار به دلیل ترس از درد، کمتر غذا بخوره؛ در نتیجه ممکنه کاهش وزن داشته باشه.\n• چرا درد بعد از غذا بیشتر میشه؟\nچون ورود غذا باعث تحریک ترشح اسید و افزایش فعالیت معده میشه و در بعضی بیماران درد تشدید میشه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "ب) Duodenal Ulcer: زخم دوازدهه",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\n• محل زخم در ابتدای روده باریک، یعنی دوازدهه است.\n• الگوی کلاسیک درد:\n- معمولاً 2 تا 3 ساعت بعد از غذا ایجاد میشه.\n- ممکنه شب‌ها بیمار رو از خواب بیدار کنه.\n- خوردن غذا ممکنه به‌طور موقت درد رو کاهش بده.\n• چرا؟ چون غذا برای مدتی اسید معده رو بافر می‌کنه و ورود محتویات معده به دوازدهه رو تغییر می‌ده؛ بنابراین درد ممکنه موقتاً کمتر بشه.",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "segments": [
+            {
+              "t": "5️⃣ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "کادر Clinical manifestations (تظاهرات بالینی)",
+              "b": true,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\nمهم‌ترین علائم PUD عبارت‌اند از:\n\n1. درد اپی‌گاستر (Epigastric Pain)\nدرد یا سوزش در ناحیه اپی‌گاستر؛ یعنی قسمت فوقانی و مرکزی شکم، درست زیر جناغ سینه.\nاین شایع‌ترین علامت کلاسیک زخم پپتیک محسوب میشه.\n\n2. تهوع و استفراغ (Nausea & Vomiting)\nتهوع و استفراغ ممکنه به علت تحریک معده یا اختلال در تخلیه معده ایجاد بشن.\n\n3. نفخ شکم (Bloating)\nاحساس نفخ و پری شکم.\n\n4. سیری زودرس (Early Satiety)\nسیری زودرس؛ یعنی بیمار با خوردن مقدار کمی غذا احساس می‌کنه معده‌اش پر شده.\n\n5. کاهش وزن (Weight Loss)\nکاهش وزن ممکنه به دلیل کاهش اشتها، ترس از درد بعد از غذا یا دریافت ناکافی مواد غذایی ایجاد بشه.\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "نکته مهم:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": " بعضی بیمارا، به‌خصوص افراد مسن یا مصرف‌کنندگان NSAIDs، ممکنه هیچ علامت هشداردهنده‌ای نداشته باشن و اولین تظاهر بیماری‌شون خونریزی باشه.\n\n6️⃣ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "کادر Complications (عوارض بیماری)",
+              "b": true,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\nاین کادر واقعاََ مهمه! چهار عارضه مهم رو باید به‌خوبی از هم تشخیص بدید:\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "1",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "اولین عارضه --> Hemorrhage؛ خونریزی",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nیکی از شایع‌ترین عوارض زخم پپتیک.\nوقتی زخم به یه رگ خونی آسیب بزنه، خونریزی ایجاد میشه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "علائم",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ":\n- Hematemesis: استفراغ خون قرمز\n- Coffee-ground emesis: استفراغ شبیه تفاله قهوه\n- Melena: مدفوع سیاه، قیری و بدبو\n- Tachycardia: افزایش ضربان قلب\n- Hypotension: کاهش فشار خون\n- Dizziness: سرگیجه و ضعف\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "چرا مدفوع سیاه میشه؟",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": " چون خون در مسیر دستگاه گوارش تحت تأثیر آنزیم‌ها و اسید قرار می‌گیره و رنگش تیره میشه.\n\nچون خون در مسیر دستگاه گوارش تحت تأثیر آنزیم‌ها و اسید قرار می‌گیره و رنگش تیره میشه.\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "نکته بسیار مهم: ",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "در خونریزی حاد، Hb و Hct ممکنه در ساعات اولیه طبیعی باشن؛ بنابراین طبیعی بودن اولین آزمایش خون، خونریزی شدید رو رد نمیکنه!\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "اولویت پرستاری:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n• بررسی Airway، Breathing و Circulation\n• بررسی علائم حیاتی و وضعیت همودینامیک\n• گرفتن دسترسی وریدی مناسب\n• بررسی CBC، تست‌های انعقادی و آماده‌سازی خون در صورت نیاز\n• اطلاع فوری به تیم درمان و آماده‌سازی برای آندوسکوپی در صورت لزوم\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "2",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "دومین عارضه --> Perforation؛ سوراخ شدن",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nدر این حالت زخم تمام ضخامت دیواره معده یا دوازدهه رو سوراخ می‌کنه.\nدر نتیجه محتویات دستگاه گوارش وارد حفره صفاقی میشن و می‌تونن باعث Peritonitis یا التهاب صفاق بشن.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "علائم کلاسیک:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n- درد ناگهانی و بسیار شدید شکم\n- شکم سفت و تخته‌مانند (Board-like rigidity)\n- Rebound tenderness\n- گاهی افت فشار خون و علائم شوک\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "چرا شکم سفت میشه؟",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nبه دلیل تحریک صفاق و ایجاد انقباض غیرارادی عضلات شکم (Involuntary guarding).\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "اقدامات پرستاری:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n• چیزی از راه دهان داده نشه (NPO)\n• ارزیابی فوری ABC و وضعیت همودینامیک\n• دسترسی وریدی و مایع‌درمانی طبق دستور\n• آماده‌سازی برای ارزیابی جراحی\n• آنتی‌بیوتیک طبق دستور پزشک\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "3",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "عارضه سوم --> Penetration؛ نفوذ زخم به عضو مجاور",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nدر این حالت زخم از دیواره معده یا دوازدهه عبور می‌کنه و به یک عضو مجاور نفوذ می‌کنه.\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "مثال مهم:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": " زخم خلفی دوازدهه ممکنه به پانکراس نفوذ کنه.\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "نشانه مهم:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nPersistent epigastric pain radiating to the back\nیعنی درد مداوم اپی‌گاستر که به پشت انتشار پیدا می‌کنه.\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "تفاوت با Perforation:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nدر Perforation محتویات گوارشی وارد حفره صفاقی میشن و ممکنه پریتونیت ایجاد بشه؛ اما در Penetration زخم به یک عضو مجاور نفوذ می‌کنه و الزاماً پریتونیت منتشر نداریم.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "4",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "عارضه‌ی چهارم --> Gastric Outlet Obstruction؛",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": " انسداد خروجی معده\nدر این حالت مسیر خروج غذا از معده به سمت دوازدهه تنگ یا مسدود میشه.\nعلت می‌تونه التهاب و ادم اطراف زخم یا تشکیل بافت اسکار (Scar tissue) باشه.\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "نتیجه چیست؟",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nغذا نمی‌تونه به‌درستی از معده خارج بشه و در معده تجمع پیدا می‌کنه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "علائم",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ":\n- استفراغ غذای هضم‌نشده\n- احساس پری و نفخ\n- اتساع معده\n- سیری زودرس\n- کم‌آبی بدن\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "یک نکته آزمایشگاهی بسیار مهم:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nاستفراغ مکرر باعث از دست رفتن اسید هیدروکلریک و کلر میشه.\n\nدر نتیجه ممکنه بیمار دچار:\n- Hypochloremia \n- Hypokalemia\n- Metabolic Alkalosis\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "رمز امتحانی",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ": استفراغ مکرر + کاهش کلر + کاهش پتاسیم + افزایش HCO₃= به Gastric Outlet Obstruction فکر کن.\n\n7️⃣ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "کادر Diagnosis (تشخیص بیماری)",
+              "b": true,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\n1. ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "EGD",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": " (",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Esophagogastroduodenoscopy",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ")\n\nدر این روش یک آندوسکوپ انعطاف‌پذیر از دهان وارد مری، معده و دوازدهه میشه.\n\n• ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "مزایا:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n- مشاهده مستقیم زخم\n- تعیین محل و اندازه زخم\n- بررسی خونریزی فعال\n- امکان نمونه‌برداری (Biopsy)\n- امکان درمان آندوسکوپیک خونریزی\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "مراقبت پرستاری بعد از EGD",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nتا زمانی که اثر بی‌حسی حلق از بین نرفته و رفلکس gag و بلع برگشت نکرده، بیمار نباید چیزی از راه دهان دریافت کنه؛ چون خطر Aspiration وجود داره.",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "segments": [
+            {
+              "t": "2. Urea Breath Test",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nاین تست برای شناسایی عفونت فعال H. pylori استفاده میشه.\nبیمار ماده حاوی اوره نشاندار دریافت می‌کنه.\nاگر باکتری H. pylori در معده وجود داشته باشه، آنزیم Urease اوره رو تجزیه می‌کنه و محصول نشاندار در بازدم قابل شناسایی میشه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "3. Stool Antigen Test",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nدر این آزمایش آنتی‌ژن‌های H. pylori در مدفوع شناسایی میشن.\nاین تست هم برای تشخیص عفونت فعال و هم برای بررسی موفقیت درمان استفاده میشه.\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "نکته مهم درباره تست مجدد:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nبرای اینکه نتیجه تست درمان ریشه‌کنی قابل اعتماد باشه:\nحداقل 4 هفته از پایان آنتی‌بیوتیک‌ها و بیسموت گذشته باشه.\nمعمولاً PPI باید حدود 2 هفته قبل از تست قطع بشه؛ البته با هماهنگی پزشک.\nچرا؟\nچون این داروها ممکنه تعداد باکتری‌ها یا فعالیت اون‌ها رو کاهش بدن و باعث نتیجه منفی کاذب بشن.\n\n8️⃣ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "کادر Treatment (درمان PUD)",
+              "b": true,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\nدرمان PUD سه هدف اصلی داره:\n1. کاهش ترشح اسید معده\n2. محافظت از مخاط و کمک به ترمیم زخم\n3. ریشه‌کن کردن H. pylori در صورت وجود عفونت\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "الف) Reduce Acid؛ کاهش اسید معده",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "1. Proton Pump Inhibitors (PPIs)",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nمثل:\n• Omeprazole\n• Pantoprazole\n• Esomeprazole\nاین داروها پمپ H+/K+ ATPase رو در سلول‌های پاریتال معده مهار می‌کنن.\nاین پمپ مرحله نهایی ترشح اسید معده رو انجام میده.\nبنابراین PPI باعث کاهش قابل توجه ترشح اسید میشه.\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "نکته پرستاری",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ": بسیاری از انواع PPI بهتره قبل از غذا مصرف بشن؛ زمان دقیق به نوع دارو و دستور تجویز بستگی داره.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "2. H2 Receptor Blockers",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nمثل:\n• Famotidine\n• Cimetidine\nاین داروها گیرنده H2 هیستامین رو در سلول‌های پاریتال مسدود می‌کنن.\nدر نتیجه ترشح اسید معده کاهش پیدا می‌کنه.\n\n🔺️",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": " نکته امتحانی",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ": Cimetidine می‌تونه تداخلات دارویی متعددی داشته باشه و عوارضی مثل Gynecomastia ایجاد کنه.\n\n3. ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Antacids",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nمثل ترکیبات حاوی آلومینیوم، منیزیم و کلسیم.\nاین داروها اسید موجود در معده رو خنثی می‌کنن.\nعوارض مهم:\n• Aluminum → یبوست\n• Magnesium → اسهال\n• Calcium → یبوست و در مصرف بیش از حد، Hypercalcemia\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "ب) Protect Mucosa؛ محافظت از مخاط\n",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n1. ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Sucralfate",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nاین دارو روی سطح زخم قرار می‌گیره و یک لایه محافظ ایجاد می‌کنه.\nبه این ترتیب مخاط آسیب‌دیده رو در برابر اسید و پپسین محافظت می‌کنه.\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "نکات پرستاری:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n• معمولاً با معده خالی مصرف میشه.\n• بهتره با داروهای دیگر فاصله داشته باشه؛ چون ممکنه جذب اون‌ها رو مختل کنه.\n• یبوست از عوارض شایعشه.\n• در بیماران مبتلا به نارسایی کلیه باید به محتوای آلومینیوم دارو توجه کرد.\n\n2. ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Bismuth",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nمثل Bismuth Subsalicylate.\n\nاین دارو:\n• به محافظت از مخاط کمک می‌کنه.\n• فعالیت ضدباکتریایی علیه H. pylori داره.\n• در بعضی رژیم‌های درمانی H. pylori استفاده میشه.\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "عوارض قابل توجه:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n• سیاه شدن زبان\n• سیاه شدن مدفوع\n\nاما دقت کنید: اگر بیمار مدفوع سیاه همراه با ضعف، سرگیجه، تاکی‌کاردی یا افت فشار خون داشته باشه، نباید همه چیز رو به بیسموت نسبت بدیم؛ باید خونریزی بررسی بشه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "ج) Eradicate H. pylori",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "؛ ریشه‌کنی باکتری\nیکی از رژیم‌های مهم درمانی، Bismuth Quadruple Therapy هست.\n\n● ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "چهار جزء اصلی درمان:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n1.PPI (کاهش ترشح اسید)\n2. Bismuth (محافظت مخاط و اثر ضدباکتریایی)\n3. Tetracycline (آنتی‌بیوتیک)\n4. Metronidazole (آنتی‌بیوتیک)\n\n● ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "نکات مهم پرستاری:",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n• ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Tetracycline",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n• با آب کافی مصرف بشه.\n• با لبنیات، آهن، کلسیم، منیزیم و آنتی‌اسیدها هم‌زمان مصرف نشه؛ چون جذبش کاهش پیدا می‌کنه.\n• ممکنه باعث Photosensitivity بشه.\n• در بارداری و کودکان محدودیت مصرف داره.\n\n• ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Metronidazole",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n• ممکنه باعث تهوع و طعم فلزی دهان بشه.\n• بیمار باید درباره پرهیز از الکل حین درمان و طبق دستور دارو بعد از آن آموزش ببینه. (واکنش شبیه دی‌سولفیرام میده)\n• دوره درمان باید کامل بشه.",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "segments": [
+            {
+              "t": "9️⃣ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "کادر مراقبت‌های پرستاری (Nursing care)",
+              "b": true,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n",
+              "b": false,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nدر بیمار مبتلا به PUD، پرستار باید چند موضوع رو به‌صورت منظم بررسی کنه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "1",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Assess Pain (پایش درد)",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n- محل درد\n- شدت درد\n- زمان شروع درد\n- ارتباط درد با غذا\n- انتشار درد به پشت\n- تغییرات درد نسبت به قبل\n- درد ناگهانی و شدید همراه با سفتی شکم می‌تونه نشانه Perforation باشه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "2",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Assess Bleeding (پایش خون‌ریزی)",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nبه دنبال نشانه‌های خونریزی باشید:\n- Hematemesis (استفراغ خونی)\n- Coffee-ground emesis (ترشحات کافی‌گراند)\n- Melena (مدفوع قیری)\n- Tachycardia (افزایش ضربان قلب)\n- Hypotension (افت فشار خون)\n- Pallor (رنگ پریدگی)\n- Dizziness (سرگیجه)\n🔺️ نکته: در بیمار مشکوک به خونریزی، فقط به Hb اولیه اعتماد نکن؛ وضعیت همودینامیک و روند آزمایش‌ها اهمیت دارن.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "3",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Monitor Vital Signs (پایش علائم حیاتی)",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nفشار خون، ضربان قلب، تعداد تنفس، سطح هوشیاری و در صورت نیاز SpO₂ رو بررسی کنید.\nتاکی‌کاردی و افت فشار خون ممکنه نشانه کاهش حجم خون در گردش باشن.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "4",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Monitor Hb/Hct and I&O (پایش هموگلوبین، هماتوکریت و جذب و دفع مایعات)",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\n- پایش Hb/Hct برای بررسی روند خونریزی\n- پایش Intake & Output برای ارزیابی تعادل مایعات\n- بررسی برون‌ده ادراری برای ارزیابی پرفیوژن کلیه\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "5",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Prevent Complications",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nپرستار باید نشانه‌های اولیه خونریزی، سوراخ شدن و انسداد خروجی معده رو بشناسه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "6",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Teach Patient",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nآموزش بیمار بخش مهمی از پیشگیری از عود زخم و عوارض اون هست.\n\n0️⃣1️⃣ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "کادر Patient education (آموزش به مددجو)",
+              "b": true,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "1",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Avoid NSAIDs (خودداری از مصرف ضدالتهاب غیراستروئیدی)",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nبیمار نباید خودسرانه از داروهایی مثل Ibuprofen، Naproxen و Aspirin استفاده کنه. اگر به داروی ضد درد نیاز داره، باید با پزشک درباره گزینه مناسب مشورت کنه.\n\n🔺️ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "نکته",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ": بیمار نباید Aspirin تجویزشده برای بیماری قلبی یا عروقی رو بدون هماهنگی پزشک قطع کنه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "2",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Quit Smoking (ترک سیگار)",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nسیگار می‌تونه روند ترمیم زخم رو مختل کنه و احتمال عود زخم رو افزایش بده. بنابراین ترک سیگار توصیه میشه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "3",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Limit Alcohol (محدود کردن مصرف الکل)",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nالکل ممکنه مخاط معده رو تحریک کنه و علائم رو تشدید کنه.\nبه بیمار توصیه میشه از مصرف الکل، به‌ویژه در صورت تشدید علائم، اجتناب کنه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "4",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Diet (رژیم غذایی)",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n🔺️ یک نکته مهم: برای همه بیماران PUD رژیم غذایی محدودکننده و یکسانی وجود نداره.\n• توصیه‌های مناسب:\n- از غذاهایی که علائم فرد رو تشدید می‌کنن پرهیز کنه.\n- در صورت تحمل بهتر، وعده‌های کوچک‌تر مصرف کنه.\n- غذاهای محرک رو بر اساس تجربه خودش محدود کنه.\n- بدونه که غذای تند یا ترش علت اصلی ایجاد زخم نیست.\n- رژیم غذایی به‌تنهایی زخم رو درمان نمی‌کنه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "5",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Complete Medication (دوره‌ی کامل مصرف)",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nبیمار باید دوره آنتی‌بیوتیک رو کامل کنه، حتی اگر علائمش زودتر برطرف بشن.\nبهبود درد لزوماً به معنی ریشه‌کن شدن H. pylori نیست.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "6",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Report Warning Signs (گزارش علائم خطر)",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nبیمار باید در صورت مشاهده موارد زیر فوراً به اورژانس مراجعه کنه:\n- استفراغ خونی\n- استفراغ شبیه تفاله قهوه\n- مدفوع سیاه و قیری، به‌خصوص همراه ضعف یا سرگیجه\n- درد ناگهانی و شدید شکم\n- غش یا ضعف شدید\nاین علائم ممکنه نشانه عوارض جدی PUD باشن.\n\n1️⃣1️⃣ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "کادر Special points (نکات ویژه‌ی امتحانی)",
+              "b": true,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "1",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Pain does not equal ulcer severity",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n• شدت درد الزاماً با شدت زخم یا میزان خونریزی متناسب نیست.\n• حتی یک زخم با خونریزی قابل توجه ممکنه در ابتدا درد زیادی ایجاد نکنه.\n• پس در ارزیابی بیمار، وضعیت همودینامیک از شدت درد مهم‌تره.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "2",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Increased BUN may suggest upper GI bleeding",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n• در خونریزی گوارشی فوقانی، خون وارد معده و روده میشه و پروتئین‌های اون هضم و جذب میشن.\n• در نتیجه تولید اوره افزایش پیدا می‌کنه و BUN ممکنه بالا بره.\n• بنابراین افزایش BUN نسبت به Creatinine می‌تونه یک سرنخ برای Upper GI Bleeding باشه.\n\n",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "3",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ". ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "Hypochloremic Metabolic Alkalosis",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\nاین مورد بیشتر در بیمارانی دیده میشه که به علت انسداد خروجی معده، استفراغ مکرر دارن.\n\n• ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "مکانیسم",
+              "b": true,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": ":\nبا استفراغ، HCl از دست میره --> از دست دادن یون هیدروژن باعث افزایش pH و ایجاد آلکالوز متابولیک میشه --> از دست دادن کلر باعث Hypochloremia میشه --> کاهش حجم مایع و افزایش دفع پتاسیم می‌تونه Hypokalemia ایجاد کنه.",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "segments": [
+            {
+              "t": "2️⃣1️⃣ ",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "کادر Key Takeaways (جمع‌بندی نهایی)",
+              "b": true,
+              "i": false,
+              "u": true,
+              "s": false,
+              "url": null
+            },
+            {
+              "t": "\n\nاگر بخوایم کل PUD رو برای امتحان در چند اصل مهم خلاصه کنیم:\n\n1. دو علت اصلی PUD، عفونت H. pylori و مصرف NSAIDs هستن.\n2.باکتری H. pylori با آنزیم Urease در محیط اسیدی معده زنده می‌مونه.\n3. داروهای NSAIDs با مهار COX و کاهش Prostaglandins، سد دفاعی مخاط رو تضعیف می‌کنن.\n4. زخم معده یا Gastric ulcer معمولاً با غذا دردناک‌تر میشه؛ Duodenal ulcer ممکنه چند ساعت بعد از غذا درد ایجاد کنه.\n5.عوارض Hemorrhage، Perforation، Penetration و Gastric Outlet Obstruction چهار عارضه مهم هستن.\n6. اندوسکوپیِ EGD یکی از مهم‌ترین روش‌های تشخیص و در موارد لازم درمان خونریزیه.\n7. داروی PPI ترشح اسید رو کم می‌کنه؛ Sucralfate از زخم محافظت می‌کنه.\n8. برای ریشه‌کنی H. pylori باید رژیم مناسب آنتی‌بیوتیکی کامل بشه.\n9. خونریزی، سفتی شکم و درد ناگهانی شدید، علائم هشدار مهم هستن.\n10. بهبود علائم به معنی درمان قطعی یا ریشه‌کنی H. pylori نیست؛ پیگیری و تست تأیید درمان اهمیت داره.",
+              "b": false,
+              "i": false,
+              "u": false,
+              "s": false,
+              "url": null
+            }
+          ]
+        }
+      ],
+      "explanation_from_admin": true,
+      "admin_diag": "admin",
+      "comment_source": "admin",
+      "comments_scanned": 5,
+      "debug": "",
+      "status": "pending"
     }
   ],
   "last_seen": {
     "quiz": 4533,
-    "visual": 20
+    "visual": 24
   },
-  "updated_at": "2026-11-27T06:33:52.310924+03:30"
+  "updated_at": "2026-11-27T16:01:34.205488+03:30"
 }
